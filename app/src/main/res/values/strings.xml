@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Geoguessr</string>
+
+    <string name="idGoogle" translatable="false">17691969973-01glq0fu95bncg9fdaebj1hieperm22m.apps.googleusercontent.com</string>
+    <!--LOGIN-->
+    <string name="botonGoogle">Iniciar Sesion</string>
 </resources>
