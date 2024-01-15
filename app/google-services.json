@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "17691969973",
+    "project_id": "geoguessr-5a8e6",
+    "storage_bucket": "geoguessr-5a8e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17691969973:android:18b624425eae8061a771fc",
+        "android_client_info": {
+          "package_name": "com.example.geoguessr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17691969973-4bvipdkh0mgmb03avuoukk8292j6jg1v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.geoguessr",
+            "certificate_hash": "40607581a58251a51afc3ce7f1148749fa9df1fc"
+          }
+        },
+        {
+          "client_id": "17691969973-k7hkaufnbja03l42r0kp5apde259vvsb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.geoguessr",
+            "certificate_hash": "a18bb96eb77402bdf8d4ac601614b193176d9809"
+          }
+        },
+        {
+          "client_id": "17691969973-01glq0fu95bncg9fdaebj1hieperm22m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_k9oZ-BGjlqTBGM8NBluIxAWEWxfI1RI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17691969973-01glq0fu95bncg9fdaebj1hieperm22m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
