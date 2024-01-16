@@ -35,11 +35,11 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>) : PagerAd
         imageView.setOnClickListener {
             // Realiza alguna acción según la posición, por ejemplo, abre otra actividad
             when (position) {
-                0 -> openMap1(context)
-                1 -> openMap2(context)
-                2 -> openMap3(context)
-                3 -> openMap4(context)
-                4 -> openMap5(context)
+                0 -> openMap1(context,position)
+                1 -> openMap2(context,position)
+                2 -> openMap3(context,position)
+                3 -> openMap4(context,position)
+                4 -> openMap5(context,position)
             }
         }
 
@@ -52,26 +52,36 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>) : PagerAd
         container.removeView(`object` as RelativeLayout)
     }
 
-    private fun openMap1(context: Context) {
+    private fun openMap1(context: Context,position:Int) {
         val intent = Intent(context, MapsGame::class.java)
+        // Pasa la posición como un extra en el Intent
+        intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)
     }
 
-    private fun openMap2(context: Context) {
+    private fun openMap2(context: Context,position:Int) {
         val intent = Intent(context, MapsGame::class.java)
+        // Pasa la posición como un extra en el Intent
+        intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)
     }
-    private fun openMap3(context: Context) {
+    private fun openMap3(context: Context,position:Int) {
         val intent = Intent(context, MapsGame::class.java)
+        // Pasa la posición como un extra en el Intent
+        intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)
     }
 
-    private fun openMap4(context: Context) {
+    private fun openMap4(context: Context,position:Int) {
         val intent = Intent(context, MapsGame::class.java)
+        // Pasa la posición como un extra en el Intent
+        intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)
     }
-    private fun openMap5(context: Context) {
+    private fun openMap5(context: Context,position:Int) {
         val intent = Intent(context, MapsGame::class.java)
+        // Pasa la posición como un extra en el Intent
+        intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)
     }
 }
