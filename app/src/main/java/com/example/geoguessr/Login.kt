@@ -112,7 +112,7 @@ class Login : AppCompatActivity() {
                                 // Actualizar la información del usuario en la interfaz de usuario
                                 actualizarInformacionUsuario()
                                 // Ir a la actividad principal
-                                irMenuPrincipal()
+                                openLevelSelector()
                             } else {
                                 // El usuario no existe en Firestore, guardar los datos
                                 val user = hashMapOf(
@@ -135,7 +135,7 @@ class Login : AppCompatActivity() {
                                 // Actualizar la información del usuario en la interfaz de usuario
                                 actualizarInformacionUsuario()
                                 // Ir a la actividad principal
-                                irMenuPrincipal()
+                                openLevelSelector()
                             }
                         } else {
                             Log.e(
@@ -177,9 +177,9 @@ class Login : AppCompatActivity() {
         }
     }
 
-    private fun irMenuPrincipal() {
+    private fun openLevelSelector() {
 
-        val homeIntent = Intent(this, MainActivity::class.java).apply {
+        val homeIntent = Intent(this, LevelSelector::class.java).apply {
 
         }
         startActivity(homeIntent)

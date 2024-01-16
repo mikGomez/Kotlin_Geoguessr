@@ -18,13 +18,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         viewPager = findViewById(R.id.idViewPager)
+        val nivel = intent.getIntExtra("levelGame", -1)
+        if (nivel == 1){
 
-        imageList = ArrayList<Int>()
-        imageList = imageList + R.drawable.img1
-        imageList = imageList + R.drawable.img2
-        imageList = imageList + R.drawable.img3
-        imageList = imageList + R.drawable.img4
-        imageList = imageList + R.drawable.img5
+            imageList = ArrayList<Int>()
+            imageList = imageList + R.drawable.img1
+            imageList = imageList + R.drawable.img2
+            imageList = imageList + R.drawable.img3
+            imageList = imageList + R.drawable.img4
+            imageList = imageList + R.drawable.img5
+        } else {
+            imageList = ArrayList<Int>()
+            imageList = imageList + R.drawable.img1
+            imageList = imageList + R.drawable.img2
+            imageList = imageList + R.drawable.img3
+            imageList = imageList + R.drawable.img4
+            imageList = imageList + R.drawable.img5
+        }
+
 
         viewPagerAdapter = ViewPagerAdapter(this@MainActivity, imageList)
 
