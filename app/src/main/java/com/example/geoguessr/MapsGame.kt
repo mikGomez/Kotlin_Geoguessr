@@ -26,6 +26,7 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
@@ -191,8 +192,12 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
      * Con el parámetro crearemos un marcador nuevo. Este evento se lanzará al hacer un long click en alguna parte del mapa.
      */
     override fun onMapLongClick(p0: LatLng) {
+        map.clear()
         var marcador = map.addMarker(MarkerOptions().position(p0!!).title("Nuevo marcador"))
         alMarcadores.add(marcador!!)
+
+        pintarCirculo(marcador.position)
+
 
         Log.e("ACSCO","Marcador añadido, marcadores actuales: ${alMarcadores.toString()}")
     }
@@ -206,6 +211,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         p0.remove()  //---> Para borrarlo cuando hago click sobre él solo hay que descomentar esto.
         alMarcadores.removeAt(alMarcadores.indexOf(p0))
         Log.e("ACSCO","Marcador eliminado, marcadores actuales: ${alMarcadores.toString()}")
+        map.clear()
 
         return true;
     }
@@ -226,38 +232,10 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     /**
      * Dibuja una línea recta desde nuestra ubicación actual al CIFP Virgen de Gracia.
      */
-    @SuppressLint("MissingPermission")
-    fun pintarRuta(){
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val miUbicacion = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        val latLng = LatLng(miUbicacion!!.latitude, miUbicacion.longitude)
-        val markerInstituto = LatLng(38.991030,-3.920489)
-
-        map.addPolyline(PolylineOptions().run{
-            add(latLng, markerInstituto)
-            color(Color.BLUE)
-            width(9f)
-        })
-
-        val loc1 = Location("")
-        loc1.latitude = latLng.latitude
-        loc1.longitude = latLng.longitude
-        val loc2 = Location("")
-        loc2.latitude = markerInstituto.latitude
-        loc2.longitude = markerInstituto.longitude
-        val distanceInMeters = loc1.distanceTo(loc2)
-        Log.e("ACSCO", distanceInMeters.toString())
-    }
-
-    /**
-     * Dibuja una línea recta desde nuestra ubicación actual al CIFP Virgen de Gracia.
-     */
-    fun pintarCirculo(){
-        val markerInstituto = LatLng(38.991030,-3.920489)
-
-        map.addCircle(CircleOptions().run{
-            center(markerInstituto)
-            radius(9.0)
+    fun pintarCirculo(centerPosition: LatLng) {
+        map.addCircle(CircleOptions().run {
+            center(centerPosition)
+            radius(100.0)
             strokeColor(Color.BLUE)
             fillColor(Color.GREEN)
         })
