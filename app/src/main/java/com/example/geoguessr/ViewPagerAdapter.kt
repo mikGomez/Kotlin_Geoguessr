@@ -1,6 +1,7 @@
 package com.example.geoguessr
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +29,19 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>) : PagerAd
 
         val imageView: ImageView = itemView.findViewById<View>(R.id.idIVImage) as ImageView
 
-        imageView.setImageResource(imageList.get(position))
+        imageView.setImageResource(imageList[position])
+
+        // Añade un OnClickListener al ImageView
+        imageView.setOnClickListener {
+            // Realiza alguna acción según la posición, por ejemplo, abre otra actividad
+            when (position) {
+                0 -> openMap1(context)
+                1 -> openMap2(context)
+                2 -> openMap3(context)
+                3 -> openMap4(context)
+                4 -> openMap5(context)
+            }
+        }
 
         Objects.requireNonNull(container).addView(itemView)
 
@@ -36,8 +49,31 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>) : PagerAd
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-
         container.removeView(`object` as RelativeLayout)
     }
+
+    private fun openMap1(context: Context) {
+        val intent = Intent(context, MapsGame::class.java)
+        context.startActivity(intent)
+    }
+
+    private fun openMap2(context: Context) {
+        val intent = Intent(context, MapsGame::class.java)
+        context.startActivity(intent)
+    }
+    private fun openMap3(context: Context) {
+        val intent = Intent(context, MapsGame::class.java)
+        context.startActivity(intent)
+    }
+
+    private fun openMap4(context: Context) {
+        val intent = Intent(context, MapsGame::class.java)
+        context.startActivity(intent)
+    }
+    private fun openMap5(context: Context) {
+        val intent = Intent(context, MapsGame::class.java)
+        context.startActivity(intent)
+    }
 }
+
 
