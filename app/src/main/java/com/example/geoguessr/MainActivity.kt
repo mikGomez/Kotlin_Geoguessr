@@ -22,18 +22,18 @@ class MainActivity : AppCompatActivity() {
         if (nivel == 1){
 
             imageList = ArrayList<Int>()
-            imageList = imageList + R.drawable.img1
-            imageList = imageList + R.drawable.img2
-            imageList = imageList + R.drawable.img3
-            imageList = imageList + R.drawable.img4
-            imageList = imageList + R.drawable.img5
+            imageList = imageList + R.drawable.gachas_ciudad_real
+            imageList = imageList + R.drawable.paella_valencia
+            imageList = imageList + R.drawable.fabada_asturias
+            imageList = imageList + R.drawable.migas_merida
+            imageList = imageList + R.drawable.cocido_madrid
         } else {
             imageList = ArrayList<Int>()
-            imageList = imageList + R.drawable.img1
-            imageList = imageList + R.drawable.img2
-            imageList = imageList + R.drawable.img3
-            imageList = imageList + R.drawable.img4
-            imageList = imageList + R.drawable.img5
+            imageList = imageList + R.drawable.cochinillo_segovia
+            imageList = imageList + R.drawable.zarangollo_murica
+            imageList = imageList + R.drawable.ternasco_aragon
+            imageList = imageList + R.drawable.pimientos_navarra
+            imageList = imageList + R.drawable.menestra_la_rioja
         }
 
 
