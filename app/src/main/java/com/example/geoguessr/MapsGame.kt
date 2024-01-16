@@ -2,12 +2,11 @@ package com.example.geoguessr
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 
 class MapsGame : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_juego_mapa)
+        setContentView(R.layout.activity_maps_game)
 
         val position = intent.getIntExtra("IMAGE_POSITION", -1)
         when(position){
