@@ -72,8 +72,6 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         if (distancia <= 3) {
             showToast(context, "¡Acertaste! Estás dentro del rango de 100 unidades.")
         } else {
-            showToast(context, "Te has equivocado. Estás fuera del rango de 100 unidades.")
-
             if (latitud > latitudJugador) {
                 showToast(context, "La comida está más al norte")
             } else if (latitud < latitudJugador) {
