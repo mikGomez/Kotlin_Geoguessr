@@ -50,6 +50,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         mapView = findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
+
         val position = intent.getIntExtra("IMAGE_POSITION", -1)
         when(position){
             0-> launch1()
@@ -58,6 +59,8 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             3-> launch4()
             4-> launch5()
         }
+
+
     }
 
     private fun launch5() {
@@ -95,7 +98,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         map.setOnPoiClickListener(this)
         map.setOnMapLongClickListener (this)
         map.setOnMarkerClickListener(this)
-
+        createMarker()
         enableMyLocation() //--> Hanilita, pidiendo permisos, la localización actual.
         //irubicacioActual() //--> Nos coloca en la ubicación actual directamente. Comenta createMarker par ver esto.
         //pintarCirculo()
@@ -239,5 +242,43 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             strokeColor(Color.BLUE)
             fillColor(Color.GREEN)
         })
+    }
+
+    /**
+     * Método en el que crearemos algunos marcadores de ejemplo.
+     */
+    private fun createMarker() {
+        val markerMadrid = LatLng(40.4168,-3.7038)
+        /*
+        Los markers se crean de una forma muy sencilla, basta con crear una instancia de un objeto LatLng() que recibirá dos
+        parámetros, la latitud y la longitud. Yo en este ejemplo he puesto las coordenadas de mi playa favorita.
+        */
+        //map.addMarker(MarkerOptions().position(markerCIFP).title("Mi CIFP favorito!"))
+        //Si queremos cambiar el color del icono, en este caso azul cyan, con un subtexto.
+        val markCIFP = map.addMarker(
+            MarkerOptions().position(markerMadrid).title("Mi instituto favorito!").icon(
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)).snippet("IES MAESTRE DE CALATRAVA"))
+        alMarcadores.add(markCIFP!!)
+
+        val cr = LatLng(38.98491, -3.92862)
+
+
+        /*
+        La función animateCamera() recibirá tres parámetros:
+
+            Un CameraUpdateFactory que a su vez llevará otros dos parámetros, el primero las coordenadas donde queremos hacer zoom
+                y el segundo valor (es un float) será la cantidad de zoom que queremos hacer en dichas coordenadas.
+            La duración de la animación en milisegundos, por ejemplo 4000 milisegundos son 4 segundos.
+            Un listener que no vamos a utilizar, simplemente añadimos null.
+         */
+        //------------ Zoom hacia un marcador ------------
+        map.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(markerMadrid, 10f),
+            4000,
+            null
+        )
+
+        //Esto la mueve sin efecto zoom.
+        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerCIFP, 18f))
     }
 }
