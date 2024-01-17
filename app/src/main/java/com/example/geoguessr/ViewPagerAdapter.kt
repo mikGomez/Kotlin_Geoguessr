@@ -12,6 +12,8 @@ import java.util.*
 
 class ViewPagerAdapter(val context: Context, val imageList: List<Int>) : PagerAdapter() {
 
+     var lat:Double = 0.0
+    var long:Double = 0.0
     override fun getCount(): Int {
         return imageList.size
     }
@@ -54,19 +56,33 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>) : PagerAd
 
     private fun openMap1(context: Context,position:Int) {
         val intent = Intent(context, MapsGame::class.java)
+        lat = 38.9861
+        long = -3.9270
+        intent.putExtra("LATITUD",lat)
+        intent.putExtra("LONGITUD",long)
         // Pasa la posición como un extra en el Intent
         intent.putExtra("IMAGE_POSITION", position)
+
+
         context.startActivity(intent)
     }
 
     private fun openMap2(context: Context,position:Int) {
         val intent = Intent(context, MapsGame::class.java)
+        lat = 39.4699
+        long = -0.3763
+        intent.putExtra("LATITUD",lat)
+        intent.putExtra("LONGITUD",long)
         // Pasa la posición como un extra en el Intent
         intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)
     }
     private fun openMap3(context: Context,position:Int) {
         val intent = Intent(context, MapsGame::class.java)
+        lat = 43.3614
+        long = -5.8593
+        intent.putExtra("LATITUD",lat)
+        intent.putExtra("LONGITUD",long)
         // Pasa la posición como un extra en el Intent
         intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)
@@ -74,12 +90,20 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>) : PagerAd
 
     private fun openMap4(context: Context,position:Int) {
         val intent = Intent(context, MapsGame::class.java)
+        lat = 38.9161
+        long = -6.3438
+        intent.putExtra("LATITUD",lat)
+        intent.putExtra("LONGITUD",long)
         // Pasa la posición como un extra en el Intent
         intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)
     }
     private fun openMap5(context: Context,position:Int) {
         val intent = Intent(context, MapsGame::class.java)
+        lat = 40.4168
+        long = -3.7038
+        intent.putExtra("LATITUD",lat)
+        intent.putExtra("LONGITUD",long)
         // Pasa la posición como un extra en el Intent
         intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)

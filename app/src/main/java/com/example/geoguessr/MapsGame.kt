@@ -39,6 +39,8 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     private val LOCATION_REQUEST_CODE: Int = 0
     private lateinit var mapView: MapView
     private lateinit var map: GoogleMap
+    private var latitud:Double = 0.0
+    private var longitud:Double = 0.0
 
     var alMarcadores = ArrayList<Marker>()
     lateinit var binding: ActivityMapsGameBinding
@@ -52,6 +54,8 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         mapView.getMapAsync(this)
 
         val position = intent.getIntExtra("IMAGE_POSITION", -1)
+        latitud = intent.getDoubleExtra("LATITUD",0.0)
+        longitud = intent.getDoubleExtra("LONGITUD",0.0)
         when(position){
             0-> launch1()
             1-> launch2()
@@ -260,7 +264,10 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                 BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)).snippet("IES MAESTRE DE CALATRAVA"))
         alMarcadores.add(markCIFP!!)
 
-        val cr = LatLng(38.98491, -3.92862)
+        val marcadorComida = LatLng(latitud, longitud)
+
+        val markCR = map.addMarker(MarkerOptions().position(marcadorComida))
+        alMarcadores.add(markCR!!)
 
 
         /*
