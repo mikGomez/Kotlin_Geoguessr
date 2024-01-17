@@ -33,6 +33,10 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PointOfInterest
 import com.google.android.gms.maps.model.PolylineOptions
+import java.lang.Math.atan2
+import java.lang.Math.cos
+import java.lang.Math.sin
+import java.lang.Math.sqrt
 
 class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, GoogleMap.OnPoiClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
 
@@ -56,31 +60,44 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         val position = intent.getIntExtra("IMAGE_POSITION", -1)
         latitud = intent.getDoubleExtra("LATITUD",0.0)
         longitud = intent.getDoubleExtra("LONGITUD",0.0)
-        when(position){
-            0-> launch1()
-            1-> launch2()
-            2-> launch3()
-            3-> launch4()
-            4-> launch5()
+
+    }
+
+    private fun comprobarCoordenadas(context: Context, latitud: Double, longitud: Double, marcador: Marker) {
+        val latitudJugador: Double = marcador.position.latitude
+        val longitudJugador: Double = marcador.position.longitude
+
+        val distancia: Double = calcularDistancia(latitud, longitud, latitudJugador, longitudJugador)
+
+        if (distancia <= 100) {
+            showToast(context, "¡Acertaste! Estás dentro del rango de 100 unidades.")
+        } else {
+            showToast(context, "Te has equivocado. Estás fuera del rango de 100 unidades.")
+
+            if (latitud > latitudJugador) {
+                showToast(context, "El punto seleccionado está al sur del punto de destino.")
+            } else if (latitud < latitudJugador) {
+                showToast(context, "El punto seleccionado está al norte del punto de destino.")
+            } else {
+                showToast(context, "El punto seleccionado está en la misma latitud que el punto de destino.")
+            }
         }
-
-
     }
-
-    private fun launch5() {
+    private fun showToast(context: Context, message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
+    private fun calcularDistancia(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val radioTierra = 6371 // Radio de la Tierra en kilómetros
 
-    private fun launch4() {
-    }
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
 
-    private fun launch3() {
-    }
+        val a = sin(dLat / 2) * sin(dLat / 2) + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
+                sin(dLon / 2) * sin(dLon / 2)
 
-    private fun launch2() {
-    }
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-    private fun launch1() {
-
+        return radioTierra * c
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -204,6 +221,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         alMarcadores.add(marcador!!)
 
         pintarCirculo(marcador.position)
+        comprobarCoordenadas(this,latitud, longitud, marcador)
 
 
         Log.e("ACSCO","Marcador añadido, marcadores actuales: ${alMarcadores.toString()}")
