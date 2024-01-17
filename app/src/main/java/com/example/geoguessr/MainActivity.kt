@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        viewPagerAdapter = ViewPagerAdapter(this@MainActivity, imageList)
+        viewPagerAdapter = ViewPagerAdapter(this@MainActivity, imageList,nivel)
 
         viewPager.adapter = viewPagerAdapter
     }
