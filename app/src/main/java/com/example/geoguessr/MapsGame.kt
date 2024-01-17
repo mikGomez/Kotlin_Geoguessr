@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -45,6 +46,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     private lateinit var map: GoogleMap
     private var latitud:Double = 0.0
     private var longitud:Double = 0.0
+    private var intentos: Int = 5
 
     var alMarcadores = ArrayList<Marker>()
     lateinit var binding: ActivityMapsGameBinding
@@ -66,20 +68,64 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     private fun comprobarCoordenadas(context: Context, latitud: Double, longitud: Double, marcador: Marker) {
         val latitudJugador: Double = marcador.position.latitude
         val longitudJugador: Double = marcador.position.longitude
-
+        val ganador:Boolean
         val distancia: Double = calcularDistancia(latitud, longitud, latitudJugador, longitudJugador)
 
         if (distancia <= 3) {
-            showToast(context, "¡Acertaste! Estás dentro del rango de 100 unidades.")
+            ganador = true
+            dialog(ganador)
+
         } else {
             if (latitud > latitudJugador) {
-                showToast(context, "La comida está más al norte")
+                showToast(context, "La comida está más al norte. Te quedan $intentos intentos")
             } else if (latitud < latitudJugador) {
-                showToast(context, "La comida está más al sur")
-            } else {
-                showToast(context, "El punto seleccionado está en la misma latitud que el punto de destino.")
+                showToast(context, "La comida está más al sur. Te quedan $intentos intentos")
+            }
+            intentos--
+            if(intentos == 0){
+                ganador = false
+                dialog(ganador)
             }
         }
+    }
+
+    private fun dialog(ganador:Boolean){
+        val builder = AlertDialog.Builder(this)
+
+        if(ganador){
+            with(builder)
+            {
+                setTitle("HAS ACERTADO")
+                setMessage("El plato tal tal. Pulsa para elegir otro plato")
+                //Otra forma es definir directamente aquí lo que se hace cuando se pulse.
+                setPositiveButton("OK", DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
+                    volverMenuPrincipal(this@MapsGame)
+                }))
+                show() //builder.show()
+            }
+        }else{
+            with(builder)
+            {
+                setTitle("SE HAN ACABADO TODOS TUS INTENTOS")
+                setMessage("Pulsa para volver al Menu de seleccion de nivel")
+                //Otra forma es definir directamente aquí lo que se hace cuando se pulse.
+                setPositiveButton("OK", DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
+                    volverGameSelector(this@MapsGame)
+                }))
+                show() //builder.show()
+            }
+        }
+
+    }
+    private fun volverGameSelector(context: Context) {
+        val intent = Intent(context, Login::class.java)
+
+        context.startActivity(intent)
+    }
+    private fun volverMenuPrincipal(context: Context) {
+        val intent = Intent(context, MainActivity::class.java)
+
+        context.startActivity(intent)
     }
     private fun showToast(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
