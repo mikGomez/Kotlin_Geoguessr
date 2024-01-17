@@ -64,6 +64,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
+        binding.txtIntentosNum.setText(intentos.toString())
         val position = intent.getIntExtra("IMAGE_POSITION", -1)
         latitud = intent.getDoubleExtra("LATITUD",0.0)
         longitud = intent.getDoubleExtra("LONGITUD",0.0)
@@ -81,12 +82,13 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             winner = true
             dialog(winner)
         } else {
+            intentos--
+            binding.txtIntentosNum.setText(intentos.toString())
             if (latitud > latitudJugador) {
                 showToast(context, "La comida está más al norte. Te quedan $intentos intentos")
             } else if (latitud < latitudJugador) {
                 showToast(context, "La comida está más al sur. Te quedan $intentos intentos")
             }
-            intentos--
             if(intentos == 0){
                 winner = false
                 dialog(winner)
@@ -101,7 +103,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             with(builder)
             {
                 setTitle("HAS ACERTADO")
-                setMessage("El plato tal tal. Pulsa OK para elegir otro plato")
+                setMessage("El plato tal tal. Pulsa OK para elegir otro plato o SALIR para ir al menu de juegos")
 
                 setPositiveButton("OK", DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
                     volverMenuPrincipal(this@MapsGame)
@@ -117,10 +119,10 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             with(builder)
             {
                 setTitle("SE HAN ACABADO TODOS TUS INTENTOS")
-                setMessage("Pulsa para volver al Menu de selección de nivel")
+                setMessage("Pulsa para volver al menu de juegos")
                 //Otra forma es definir directamente aquí lo que se hace cuando se pulse.
                 setPositiveButton("OK", DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
-                    volverGameSelector(this@MapsGame)
+                    goGameSelector(this@MapsGame)
                 }))
                 show() //builder.show()
             }
@@ -130,29 +132,28 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
     private fun closeApp() {
         val builder = AlertDialog.Builder(this)
-
+        val process:Process
         with(builder)
         {
-            setTitle("VAS A SALIR DE LA APLICACIóN")
+            setTitle("VAS A SALIR AL MENU DE JUEGO")
             setMessage("¿Deseas guardar los datos de tu partida? (nivel, puntuación y tiradas) ")
             //Otra forma es definir directamente aquí lo que se hace cuando se pulse.
             setPositiveButton("GUARDAR Y SALIR", DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
                 saveGame()
-                System.exit(1)
+                goGameSelector(this@MapsGame)
             }))
             setNegativeButton("NO GUARDAR Y SALIR", ({ dialog: DialogInterface, which: Int ->
-                System.exit(1)
+                goGameSelector(this@MapsGame)
             }))
             show() //builder.show()
         }
     }
-
     private fun saveGame(){
 
     }
 
-    private fun volverGameSelector(context: Context) {
-        val intent = Intent(context, Login::class.java)
+    private fun goGameSelector(context: Context) {
+        val intent = Intent(context, GameSelector::class.java)
 
         context.startActivity(intent)
     }
