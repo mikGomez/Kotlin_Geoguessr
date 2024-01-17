@@ -48,6 +48,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     private lateinit var map: GoogleMap
     private var latitud:Double = 0.0
     private var longitud:Double = 0.0
+    private var nivel : Int = 0
     private var intentos: Int = 5
 
     val db = Firebase.firestore
@@ -66,6 +67,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         val position = intent.getIntExtra("IMAGE_POSITION", -1)
         latitud = intent.getDoubleExtra("LATITUD",0.0)
         longitud = intent.getDoubleExtra("LONGITUD",0.0)
+        nivel = intent.getIntExtra("NIVEL",0)
 
     }
 
@@ -155,8 +157,9 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         context.startActivity(intent)
     }
     private fun volverMenuPrincipal(context: Context) {
-        val intent = Intent(context, LevelSelector::class.java)
-
+        val intent = Intent(context, MainActivity::class.java)
+        // Pasa la posición como un extra en el Intent
+        intent.putExtra("levelGame", nivel)
         context.startActivity(intent)
     }
     private fun showToast(context: Context, message: String) {
