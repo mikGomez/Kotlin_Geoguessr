@@ -69,15 +69,15 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
         val distancia: Double = calcularDistancia(latitud, longitud, latitudJugador, longitudJugador)
 
-        if (distancia <= 100) {
+        if (distancia <= 3) {
             showToast(context, "¡Acertaste! Estás dentro del rango de 100 unidades.")
         } else {
             showToast(context, "Te has equivocado. Estás fuera del rango de 100 unidades.")
 
             if (latitud > latitudJugador) {
-                showToast(context, "El punto seleccionado está al sur del punto de destino.")
+                showToast(context, "La comida está más al norte")
             } else if (latitud < latitudJugador) {
-                showToast(context, "El punto seleccionado está al norte del punto de destino.")
+                showToast(context, "La comida está más al sur")
             } else {
                 showToast(context, "El punto seleccionado está en la misma latitud que el punto de destino.")
             }
@@ -260,7 +260,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     fun pintarCirculo(centerPosition: LatLng) {
         map.addCircle(CircleOptions().run {
             center(centerPosition)
-            radius(100.0)
+            radius(3000.0)
             strokeColor(Color.BLUE)
             fillColor(Color.GREEN)
         })
