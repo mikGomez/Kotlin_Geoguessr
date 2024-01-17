@@ -66,6 +66,7 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>,val nivel 
 
         intent.putExtra("LATITUD",lat)
         intent.putExtra("LONGITUD",long)
+        intent.putExtra("NIVEL",nivel)
         // Pasa la posición como un extra en el Intent
         intent.putExtra("IMAGE_POSITION", position)
 
@@ -85,6 +86,7 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>,val nivel 
         val intent = Intent(context, MapsGame::class.java)
         intent.putExtra("LATITUD",lat)
         intent.putExtra("LONGITUD",long)
+        intent.putExtra("NIVEL",nivel)
         // Pasa la posición como un extra en el Intent
         intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)
@@ -101,6 +103,7 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>,val nivel 
 
         intent.putExtra("LATITUD",lat)
         intent.putExtra("LONGITUD",long)
+        intent.putExtra("NIVEL",nivel)
         // Pasa la posición como un extra en el Intent
         intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)
@@ -118,6 +121,7 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>,val nivel 
 
         intent.putExtra("LATITUD",lat)
         intent.putExtra("LONGITUD",long)
+        intent.putExtra("NIVEL",nivel)
         // Pasa la posición como un extra en el Intent
         intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)
@@ -134,10 +138,12 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>,val nivel 
 
         intent.putExtra("LATITUD",lat)
         intent.putExtra("LONGITUD",long)
+        intent.putExtra("NIVEL",nivel)
         // Pasa la posición como un extra en el Intent
         intent.putExtra("IMAGE_POSITION", position)
         context.startActivity(intent)
     }
+
 }
 
 
