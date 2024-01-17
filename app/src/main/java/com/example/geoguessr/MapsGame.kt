@@ -34,6 +34,8 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PointOfInterest
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import java.lang.Math.atan2
 import java.lang.Math.cos
 import java.lang.Math.sin
@@ -47,6 +49,8 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     private var latitud:Double = 0.0
     private var longitud:Double = 0.0
     private var intentos: Int = 5
+
+    val db = Firebase.firestore
 
     var alMarcadores = ArrayList<Marker>()
     lateinit var binding: ActivityMapsGameBinding
@@ -68,13 +72,12 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     private fun comprobarCoordenadas(context: Context, latitud: Double, longitud: Double, marcador: Marker) {
         val latitudJugador: Double = marcador.position.latitude
         val longitudJugador: Double = marcador.position.longitude
-        val ganador:Boolean
+        val winner:Boolean
         val distancia: Double = calcularDistancia(latitud, longitud, latitudJugador, longitudJugador)
 
         if (distancia <= 3) {
-            ganador = true
-            dialog(ganador)
-
+            winner = true
+            dialog(winner)
         } else {
             if (latitud > latitudJugador) {
                 showToast(context, "La comida está más al norte. Te quedan $intentos intentos")
@@ -83,31 +86,36 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             }
             intentos--
             if(intentos == 0){
-                ganador = false
-                dialog(ganador)
+                winner = false
+                dialog(winner)
             }
         }
     }
 
-    private fun dialog(ganador:Boolean){
+    private fun dialog(winner:Boolean){
         val builder = AlertDialog.Builder(this)
 
-        if(ganador){
+        if(winner){
             with(builder)
             {
                 setTitle("HAS ACERTADO")
-                setMessage("El plato tal tal. Pulsa para elegir otro plato")
-                //Otra forma es definir directamente aquí lo que se hace cuando se pulse.
+                setMessage("El plato tal tal. Pulsa OK para elegir otro plato")
+
                 setPositiveButton("OK", DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
                     volverMenuPrincipal(this@MapsGame)
                 }))
+                setNegativeButton("Salir", ({ dialog: DialogInterface, which: Int ->
+                    closeApp()
+                }))
+
+
                 show() //builder.show()
             }
         }else{
             with(builder)
             {
                 setTitle("SE HAN ACABADO TODOS TUS INTENTOS")
-                setMessage("Pulsa para volver al Menu de seleccion de nivel")
+                setMessage("Pulsa para volver al Menu de selección de nivel")
                 //Otra forma es definir directamente aquí lo que se hace cuando se pulse.
                 setPositiveButton("OK", DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
                     volverGameSelector(this@MapsGame)
@@ -117,13 +125,37 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         }
 
     }
+
+    private fun closeApp() {
+        val builder = AlertDialog.Builder(this)
+
+        with(builder)
+        {
+            setTitle("VAS A SALIR DE LA APLICACIóN")
+            setMessage("¿Deseas guardar los datos de tu partida? (nivel, puntuación y tiradas) ")
+            //Otra forma es definir directamente aquí lo que se hace cuando se pulse.
+            setPositiveButton("GUARDAR Y SALIR", DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
+                saveGame()
+                System.exit(1)
+            }))
+            setNegativeButton("NO GUARDAR Y SALIR", ({ dialog: DialogInterface, which: Int ->
+                System.exit(1)
+            }))
+            show() //builder.show()
+        }
+    }
+
+    private fun saveGame(){
+
+    }
+
     private fun volverGameSelector(context: Context) {
         val intent = Intent(context, Login::class.java)
 
         context.startActivity(intent)
     }
     private fun volverMenuPrincipal(context: Context) {
-        val intent = Intent(context, MainActivity::class.java)
+        val intent = Intent(context, LevelSelector::class.java)
 
         context.startActivity(intent)
     }
