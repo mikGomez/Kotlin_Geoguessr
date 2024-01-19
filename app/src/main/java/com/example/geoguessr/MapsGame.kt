@@ -35,23 +35,28 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PointOfInterest
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import java.lang.Math.atan2
 import java.lang.Math.cos
 import java.lang.Math.sin
 import java.lang.Math.sqrt
 
-class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, GoogleMap.OnPoiClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
+class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
+    GoogleMap.OnMyLocationClickListener, GoogleMap.OnPoiClickListener,
+    GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
 
     private val LOCATION_REQUEST_CODE: Int = 0
     private lateinit var mapView: MapView
     private lateinit var map: GoogleMap
-    private var latitud:Double = 0.0
-    private var longitud:Double = 0.0
-    private var nivel : Int = 0
+    private var latitud: Double = 0.0
+    private var longitud: Double = 0.0
+    private var nivel: Int = 0
     private var intentos: Int = 5
+    private var puntuacion: Int = 0
 
     val db = Firebase.firestore
+
 
     var alMarcadores = ArrayList<Marker>()
     lateinit var binding: ActivityMapsGameBinding
@@ -59,24 +64,30 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         super.onCreate(savedInstanceState)
         binding = ActivityMapsGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        cargarPuntuacion()
         mapView = findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
         binding.txtIntentosNum.setText(intentos.toString())
         val position = intent.getIntExtra("IMAGE_POSITION", -1)
-        latitud = intent.getDoubleExtra("LATITUD",0.0)
-        longitud = intent.getDoubleExtra("LONGITUD",0.0)
-        nivel = intent.getIntExtra("NIVEL",0)
+        latitud = intent.getDoubleExtra("LATITUD", 0.0)
+        longitud = intent.getDoubleExtra("LONGITUD", 0.0)
+        nivel = intent.getIntExtra("NIVEL", 0)
 
     }
 
-    private fun comprobarCoordenadas(context: Context, latitud: Double, longitud: Double, marcador: Marker) {
+    private fun comprobarCoordenadas(
+        context: Context,
+        latitud: Double,
+        longitud: Double,
+        marcador: Marker
+    ) {
         val latitudJugador: Double = marcador.position.latitude
         val longitudJugador: Double = marcador.position.longitude
-        val winner:Boolean
-        val distancia: Double = calcularDistancia(latitud, longitud, latitudJugador, longitudJugador)
+        val winner: Boolean
+        val distancia: Double =
+            calcularDistancia(latitud, longitud, latitudJugador, longitudJugador)
 
         if (distancia <= 3) {
             winner = true
@@ -89,25 +100,31 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             } else if (latitud < latitudJugador) {
                 showToast(context, "La comida está más al sur. Te quedan $intentos intentos")
             }
-            if(intentos == 0){
+            if (intentos == 0) {
                 winner = false
                 dialog(winner)
             }
         }
     }
 
-    private fun dialog(winner:Boolean){
+    private fun dialog(winner: Boolean) {
         val builder = AlertDialog.Builder(this)
 
-        if(winner){
+        if (winner) {
             with(builder)
             {
                 setTitle("HAS ACERTADO")
+                puntuacion += 100
+                binding.txtPuntuacionNum.setText(puntuacion.toString())
+
                 setMessage("El plato tal tal. Pulsa OK para elegir otro plato o SALIR para ir al menu de juegos")
 
-                setPositiveButton("OK", DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
-                    volverMenuPrincipal(this@MapsGame)
-                }))
+                setPositiveButton(
+                    "OK",
+                    DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
+                        volverMenuPrincipal(this@MapsGame)
+                    })
+                )
                 setNegativeButton("Salir", ({ dialog: DialogInterface, which: Int ->
                     closeApp()
                 }))
@@ -115,15 +132,18 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
                 show() //builder.show()
             }
-        }else{
+        } else {
             with(builder)
             {
                 setTitle("SE HAN ACABADO TODOS TUS INTENTOS")
                 setMessage("Pulsa para volver al menu de juegos")
                 //Otra forma es definir directamente aquí lo que se hace cuando se pulse.
-                setPositiveButton("OK", DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
-                    goGameSelector(this@MapsGame)
-                }))
+                setPositiveButton(
+                    "OK",
+                    DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
+                        goGameSelector(this@MapsGame)
+                    })
+                )
                 show() //builder.show()
             }
         }
@@ -132,23 +152,28 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
     private fun closeApp() {
         val builder = AlertDialog.Builder(this)
-        val process:Process
+        val process: Process
         with(builder)
         {
             setTitle("VAS A SALIR AL MENU DE JUEGO")
             setMessage("¿Deseas guardar los datos de tu partida? (nivel, puntuación y tiradas) ")
             //Otra forma es definir directamente aquí lo que se hace cuando se pulse.
-            setPositiveButton("GUARDAR Y SALIR", DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
-                saveGame()
-                goGameSelector(this@MapsGame)
-            }))
+            setPositiveButton(
+                "GUARDAR Y SALIR",
+                DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
+                    saveGame()
+                    actualizarPuntuacion(puntuacion)
+                    goGameSelector(this@MapsGame)
+                })
+            )
             setNegativeButton("NO GUARDAR Y SALIR", ({ dialog: DialogInterface, which: Int ->
                 goGameSelector(this@MapsGame)
             }))
             show() //builder.show()
         }
     }
-    private fun saveGame(){
+
+    private fun saveGame() {
 
     }
 
@@ -157,23 +182,27 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
         context.startActivity(intent)
     }
+
     private fun volverMenuPrincipal(context: Context) {
         val intent = Intent(context, MainActivity::class.java)
         // Pasa la posición como un extra en el Intent
         intent.putExtra("levelGame", nivel)
         context.startActivity(intent)
     }
+
     private fun showToast(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
+
     private fun calcularDistancia(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         val radioTierra = 6371 // Radio de la Tierra en kilómetros
 
         val dLat = Math.toRadians(lat2 - lat1)
         val dLon = Math.toRadians(lon2 - lon1)
 
-        val a = sin(dLat / 2) * sin(dLat / 2) + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
-                sin(dLon / 2) * sin(dLon / 2)
+        val a =
+            sin(dLat / 2) * sin(dLat / 2) + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
+                    sin(dLon / 2) * sin(dLon / 2)
 
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
@@ -197,7 +226,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         map.setOnMyLocationButtonClickListener(this)
         map.setOnMyLocationClickListener(this)
         map.setOnPoiClickListener(this)
-        map.setOnMapLongClickListener (this)
+        map.setOnMapLongClickListener(this)
         map.setOnMarkerClickListener(this)
         createMarker()
         enableMyLocation() //--> Hanilita, pidiendo permisos, la localización actual.
@@ -205,7 +234,6 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         //pintarCirculo()
         //pintarRuta()
     }
-
 
 
     //----------------------------------------------------------------------------------------
@@ -231,24 +259,29 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
      * Método que solicita los permisos.
      */
     private fun requestLocationPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        ) {
             Toast.makeText(this, "Ve a ajustes y acepta los permisos", Toast.LENGTH_SHORT).show()
         } else {
-            ActivityCompat.requestPermissions(this,
+            ActivityCompat.requestPermissions(
+                this,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_REQUEST_CODE)
+                LOCATION_REQUEST_CODE
+            )
         }
     }
 
     /**
      * Con este método vamos a ajustar el tamaño de todos los iconos que usemos en los marcadores.
      */
-    fun sizeIcon(idImage:Int): BitmapDescriptor {
+    fun sizeIcon(idImage: Int): BitmapDescriptor {
         val altura = 60
         val anchura = 60
 
-        var draw = ContextCompat.getDrawable(this,idImage) as BitmapDrawable
+        var draw = ContextCompat.getDrawable(this, idImage) as BitmapDrawable
         val bitmap = draw.bitmap  //Aquí tenemos la imagen.
 
         //Le cambiamos el tamaño:
@@ -284,7 +317,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         dialogBuilder.run {
             setTitle("Información del lugar.")
             setMessage("Id: " + p0!!.placeId + "\nNombre: " + p0!!.name + "\nLatitud: " + p0!!.latLng.latitude.toString() + " \nLongitud: " + p0.latLng.longitude.toString())
-            setPositiveButton("Aceptar"){ dialog: DialogInterface, i:Int ->
+            setPositiveButton("Aceptar") { dialog: DialogInterface, i: Int ->
 
             }
         }
@@ -301,10 +334,10 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         alMarcadores.add(marcador!!)
 
         pintarCirculo(marcador.position)
-        comprobarCoordenadas(this,latitud, longitud, marcador)
+        comprobarCoordenadas(this, latitud, longitud, marcador)
 
 
-        Log.e("ACSCO","Marcador añadido, marcadores actuales: ${alMarcadores.toString()}")
+        Log.e("ACSCO", "Marcador añadido, marcadores actuales: ${alMarcadores.toString()}")
     }
 
     /**
@@ -315,7 +348,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
         p0.remove()  //---> Para borrarlo cuando hago click sobre él solo hay que descomentar esto.
         alMarcadores.removeAt(alMarcadores.indexOf(p0))
-        Log.e("ACSCO","Marcador eliminado, marcadores actuales: ${alMarcadores.toString()}")
+        Log.e("ACSCO", "Marcador eliminado, marcadores actuales: ${alMarcadores.toString()}")
         map.clear()
 
         return true;
@@ -329,7 +362,12 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val miUbicacion = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
         val latLng = LatLng(miUbicacion!!.latitude, miUbicacion.longitude)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18f)) //--> Mueve la cámara a esa posición, sin efecto. El valor real indica el nivel de Zoom, de menos a más.
+        map.moveCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                latLng,
+                18f
+            )
+        ) //--> Mueve la cámara a esa posición, sin efecto. El valor real indica el nivel de Zoom, de menos a más.
     }
 
     //------------------------------------------------------------------------------------------------------
@@ -350,7 +388,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
      * Método en el que crearemos algunos marcadores de ejemplo.
      */
     private fun createMarker() {
-        val markerMadrid = LatLng(40.4168,-3.7038)
+        val markerMadrid = LatLng(40.4168, -3.7038)
         /*
         Los markers se crean de una forma muy sencilla, basta con crear una instancia de un objeto LatLng() que recibirá dos
         parámetros, la latitud y la longitud. Yo en este ejemplo he puesto las coordenadas de mi playa favorita.
@@ -359,7 +397,9 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         //Si queremos cambiar el color del icono, en este caso azul cyan, con un subtexto.
         val markCIFP = map.addMarker(
             MarkerOptions().position(markerMadrid).title("Mi instituto favorito!").icon(
-                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)).snippet("IES MAESTRE DE CALATRAVA"))
+                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)
+            ).snippet("IES MAESTRE DE CALATRAVA")
+        )
         alMarcadores.add(markCIFP!!)
 
         val marcadorComida = LatLng(latitud, longitud)
@@ -383,7 +423,43 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             null
         )
 
-        //Esto la mueve sin efecto zoom.
-        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerCIFP, 18f))
+
     }
+
+    private fun actualizarPuntuacion(puntuacion: Int) {
+        val userEmail = FirebaseAuth.getInstance().currentUser?.email
+
+        if (userEmail != null) {
+            db.collection("Usuarios")
+                .document(userEmail)
+                .update("record", puntuacion)
+                .addOnSuccessListener {
+                    Toast.makeText(
+                        applicationContext,
+                        "Puntuacion actualizada", Toast.LENGTH_SHORT
+                    ).show()
+                }
+        }
+    }
+
+    private fun cargarPuntuacion(){
+        // Obtener el email del usuario actualmente autenticado
+        val userEmail = FirebaseAuth.getInstance().currentUser?.email
+
+        if (userEmail != null) {
+            // Consultar Firestore para obtener el nombre del usuario
+            db.collection("Usuarios")
+                .document(userEmail)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val puntuacionFirebase = document.getLong("record")
+                        binding.txtPuntuacionNum.setText(puntuacionFirebase.toString())
+                    }
+                }
+        }
+    }
+
+
+
 }
