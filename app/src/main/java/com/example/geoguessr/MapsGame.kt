@@ -53,7 +53,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     private var longitud: Double = 0.0
     private var nivel: Int = 0
     private var intentos: Int = 5
-    private var puntuacion: Int = 0
+    private var puntuacion:Int = 0
 
     val db = Firebase.firestore
 
@@ -64,7 +64,8 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         super.onCreate(savedInstanceState)
         binding = ActivityMapsGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        cargarPuntuacion()
+        puntuacion = cargarPuntuacion()
+        binding.txtPuntuacionNum.setText(puntuacion.toString())
         mapView = findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
@@ -114,6 +115,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             with(builder)
             {
                 setTitle("HAS ACERTADO")
+
                 puntuacion += 100
                 binding.txtPuntuacionNum.setText(puntuacion.toString())
 
@@ -126,7 +128,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                     })
                 )
                 setNegativeButton("Salir", ({ dialog: DialogInterface, which: Int ->
-                    closeApp()
+                    closeApp(puntuacion)
                 }))
 
 
@@ -150,7 +152,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
     }
 
-    private fun closeApp() {
+    private fun closeApp(puntu:Int) {
         val builder = AlertDialog.Builder(this)
         val process: Process
         with(builder)
@@ -162,7 +164,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                 "GUARDAR Y SALIR",
                 DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
                     saveGame()
-                    actualizarPuntuacion(puntuacion)
+                    actualizarPuntuacion(puntu)
                     goGameSelector(this@MapsGame)
                 })
             )
@@ -442,10 +444,10 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         }
     }
 
-    private fun cargarPuntuacion(){
+    private fun cargarPuntuacion():Int{
         // Obtener el email del usuario actualmente autenticado
         val userEmail = FirebaseAuth.getInstance().currentUser?.email
-
+        var puntu = 0
         if (userEmail != null) {
             // Consultar Firestore para obtener el nombre del usuario
             db.collection("Usuarios")
@@ -455,10 +457,16 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                     if (document.exists()) {
                         val puntuacionFirebase = document.getLong("record")
                         binding.txtPuntuacionNum.setText(puntuacionFirebase.toString())
+                        if (puntuacionFirebase != null) {
+                            puntu = puntuacionFirebase.toInt()
+                        }
                     }
                 }
         }
+        return puntu
     }
+
+
 
 
 
