@@ -7,6 +7,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.location.Location
@@ -37,6 +38,7 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
+import java.io.File
 import java.lang.Math.atan2
 import java.lang.Math.cos
 import java.lang.Math.sin
@@ -53,7 +55,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     private var longitud: Double = 0.0
     private var nivel: Int = 0
     private var intentos: Int = 5
-    private var puntuacion:Int = 0
+
 
     val db = Firebase.firestore
 
@@ -64,8 +66,9 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         super.onCreate(savedInstanceState)
         binding = ActivityMapsGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        puntuacion = cargarPuntuacion()
-        binding.txtPuntuacionNum.setText(puntuacion.toString())
+        cargarPuntuacion()
+
+
         mapView = findViewById(R.id.mapView)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
@@ -116,9 +119,15 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             {
                 setTitle("HAS ACERTADO")
 
+                var valorPuntuacion = binding.txtPuntuacionNum.text.toString()
+                var puntuacion = valorPuntuacion.toInt()
                 puntuacion += 100
-                binding.txtPuntuacionNum.setText(puntuacion.toString())
 
+                binding.txtPuntuacionNum.setText(puntuacion.toString())
+                Toast.makeText(
+                    applicationContext,
+                    puntuacion.toString(), Toast.LENGTH_SHORT
+                ).show()
                 setMessage("El plato tal tal. Pulsa OK para elegir otro plato o SALIR para ir al menu de juegos")
 
                 setPositiveButton(
@@ -152,7 +161,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
     }
 
-    private fun closeApp(puntu:Int) {
+    private fun closeApp(puntu: Int) {
         val builder = AlertDialog.Builder(this)
         val process: Process
         with(builder)
@@ -164,7 +173,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                 "GUARDAR Y SALIR",
                 DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
                     saveGame()
-                    actualizarPuntuacion(puntu)
+                    guardarPuntuacion(puntu)
                     goGameSelector(this@MapsGame)
                 })
             )
@@ -424,30 +433,37 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             4000,
             null
         )
-
-
     }
 
-    private fun actualizarPuntuacion(puntuacion: Int) {
-        val userEmail = FirebaseAuth.getInstance().currentUser?.email
+    /**
+     * Metodo para el registro/login con google
+     */
+    private fun guardarPuntuacion(puntuacion: Int) {
+        val user = FirebaseAuth.getInstance().currentUser
 
-        if (userEmail != null) {
+        if (user != null) {
             db.collection("Usuarios")
-                .document(userEmail)
+                .document(user.email.toString())
                 .update("record", puntuacion)
                 .addOnSuccessListener {
                     Toast.makeText(
                         applicationContext,
-                        "Puntuacion actualizada", Toast.LENGTH_SHORT
+                        puntuacion.toString(), Toast.LENGTH_SHORT
                     ).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        applicationContext,
+                        "Fallo al actualizar la puntuacion", Toast.LENGTH_SHORT
+                    ).show()
+
                 }
         }
     }
 
-    private fun cargarPuntuacion():Int{
+    private fun cargarPuntuacion(){
         // Obtener el email del usuario actualmente autenticado
         val userEmail = FirebaseAuth.getInstance().currentUser?.email
-        var puntu = 0
         if (userEmail != null) {
             // Consultar Firestore para obtener el nombre del usuario
             db.collection("Usuarios")
@@ -455,19 +471,34 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                 .get()
                 .addOnSuccessListener { document ->
                     if (document.exists()) {
-                        val puntuacionFirebase = document.getLong("record")
-                        binding.txtPuntuacionNum.setText(puntuacionFirebase.toString())
-                        if (puntuacionFirebase != null) {
-                            puntu = puntuacionFirebase.toInt()
-                        }
+                        // El documento existe, obtener el nombre y establecerlo en el botón de perfil
+                        val punt = document.getLong("record")
+
+                        binding.txtPuntuacionNum.setText(punt.toString())
+                        Toast.makeText(
+                            applicationContext,
+                            punt.toString(), Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            applicationContext,
+                            "Fallo al cargar la puntuacion", Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
+                .addOnFailureListener { exception ->
+                    Log.e("PVR", "Fallo al cargar la puntuacion", exception)
+
+                }
+        } else {
+            Toast.makeText(
+                applicationContext,
+                "Fallo al mostrar la actualizacion", Toast.LENGTH_SHORT
+            ).show()
         }
-        return puntu
+
+
     }
-
-
-
 
 
 }
