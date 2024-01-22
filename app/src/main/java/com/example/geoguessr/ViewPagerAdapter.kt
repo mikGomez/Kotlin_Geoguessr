@@ -2,17 +2,22 @@ package com.example.geoguessr
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.viewpager.widget.PagerAdapter
+import com.google.firebase.Firebase
+import com.google.firebase.storage.storage
+import java.io.File
 import java.util.*
 
-class ViewPagerAdapter(val context: Context, val imageList: List<Int>,val nivel :Int) : PagerAdapter() {
+class ViewPagerAdapter(val context: Context, val imageList: List<String>, val nivel: Int) : PagerAdapter() {
 
-     var lat:Double = 0.0
+    var lat:Double = 0.0
     var long:Double = 0.0
     override fun getCount(): Int {
         return imageList.size
@@ -31,7 +36,7 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>,val nivel 
 
         val imageView: ImageView = itemView.findViewById<View>(R.id.idIVImage) as ImageView
 
-        imageView.setImageResource(imageList[position])
+        cargarImagenDesdeStorage(imageView, imageList[position])
 
         // Añade un OnClickListener al ImageView
         imageView.setOnClickListener {
@@ -52,6 +57,19 @@ class ViewPagerAdapter(val context: Context, val imageList: List<Int>,val nivel 
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
         container.removeView(`object` as RelativeLayout)
+    }
+
+    private fun cargarImagenDesdeStorage(imageView: ImageView, imageUrl: String) {
+        val storageRef = Firebase.storage.reference
+        val localFile = File.createTempFile("tempImage", "jpg")
+
+        val refFoto = storageRef.child(imageUrl)
+        refFoto.getFile(localFile).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
+            imageView.setImageBitmap(bitmap)
+        }.addOnFailureListener {
+            Toast.makeText(context, "Algo ha fallado en la descarga de la foto", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun openMap1(context: Context,position:Int) {
