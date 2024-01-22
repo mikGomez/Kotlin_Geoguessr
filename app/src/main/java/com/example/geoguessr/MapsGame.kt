@@ -581,7 +581,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
          */
         //------------ Zoom hacia un marcador ------------
         map.animateCamera(
-            CameraUpdateFactory.newLatLngZoom(markerMadrid, 10f),
+            CameraUpdateFactory.newLatLngZoom(markerMadrid, 6f),
             4000,
             null
         )
