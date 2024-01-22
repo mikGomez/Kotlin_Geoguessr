@@ -55,8 +55,13 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     private lateinit var map: GoogleMap
     private var latitud: Double = 0.0
     private var longitud: Double = 0.0
+    private  var nombrePlato = ""
+    private var detallesPlato = ""
+    private var ciudadPlato = ""
     private var nivel: Int = 0
     private var intentos: Int = 5
+    private var position : Int = 0
+    private var fotoPlato : String = ""
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
 
@@ -78,10 +83,14 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         mapView.getMapAsync(this)
 
         binding.txtIntentosNum.setText(intentos.toString())
-        val position = intent.getIntExtra("IMAGE_POSITION", -1)
+        position = intent.getIntExtra("IMAGE_POSITION", -1)
         latitud = intent.getDoubleExtra("LATITUD", 0.0)
         longitud = intent.getDoubleExtra("LONGITUD", 0.0)
         nivel = intent.getIntExtra("NIVEL", 0)
+        ciudadPlato = intent.getStringExtra("CIUDAD").toString()
+        nombrePlato = intent.getStringExtra("NOMBREPLATO").toString()
+        detallesPlato = intent.getStringExtra("DETALLES").toString()
+        fotoPlato = intent.getStringExtra("FOTOPLATO").toString()
 
         recuperarDescubierto(position)
 
@@ -138,6 +147,12 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                                     binding.imageView4.setVisibility(View.VISIBLE)
                                     binding.imageView5.setVisibility(View.VISIBLE)
                                     binding.imageView6.setVisibility(View.VISIBLE)
+                                    binding.txtCambiarDescr.text = detallesPlato
+                                    binding.txtCambiarCiudad.text = ciudadPlato
+                                    binding.txtName.text = nombrePlato
+
+                                    val drawable = resources.getIdentifier(fotoPlato,"drawable",packageName)
+                                    binding.imgDetalle.setImageResource(drawable)
 
                                     binding.mapView.setVisibility(View.GONE)
                                     binding.txtTienes.setVisibility(View.GONE)
@@ -207,6 +222,8 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                 var puntuacion = valorPuntuacion.toInt()
                 puntuacion += 100
 
+                actualizarDescubierto(position,true)
+
                 binding.txtPuntuacionNum.setText(puntuacion.toString())
                 Toast.makeText(
                     applicationContext,
@@ -230,6 +247,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         } else {
             with(builder)
             {
+                actualizarDescubierto(position,false)
                 setTitle("SE HAN ACABADO TODOS TUS INTENTOS")
                 setMessage("Pulsa para volver al menu de juegos")
                 //Otra forma es definir directamente aquí lo que se hace cuando se pulse.
@@ -580,9 +598,32 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                 "Fallo al mostrar la actualizacion", Toast.LENGTH_SHORT
             ).show()
         }
-
-
     }
+    private fun actualizarDescubierto(position: Int, nuevoValor: Boolean) {
+        if (currentUser != null) {
+            val userEmail = currentUser.email
 
+            if (userEmail != null) {
+                val userDocument = db.collection("Usuarios").document(userEmail)
 
+                // Construir el mapa de actualización
+                val updateMap = hashMapOf<String, Any>(
+                    "nivel.nivel1.descubierto$position" to nuevoValor
+                )
+
+                // Actualizar el documento en Firestore
+                userDocument.update(updateMap)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "Descubierto$position actualizado exitosamente a $nuevoValor")
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e(TAG, "Error al actualizar descubierto$position", exception)
+                    }
+            } else {
+                Log.e(TAG, "El correo electrónico del usuario es nulo")
+            }
+        } else {
+            Log.e(TAG, "El usuario no está autenticado")
+        }
+    }
 }
