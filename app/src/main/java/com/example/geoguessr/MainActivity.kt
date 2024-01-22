@@ -9,7 +9,6 @@ import androidx.viewpager.widget.ViewPager
 
 import com.example.geoguessr.databinding.ActivityMainBinding
 import com.google.firebase.Firebase
-import com.google.firebase.storage.storage
 
 
 import java.io.File

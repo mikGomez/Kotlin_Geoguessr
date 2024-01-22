@@ -2,6 +2,7 @@ package com.example.geoguessr
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -15,6 +16,7 @@ import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -55,6 +57,8 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     private var longitud: Double = 0.0
     private var nivel: Int = 0
     private var intentos: Int = 5
+    val auth = FirebaseAuth.getInstance()
+    val currentUser = auth.currentUser
 
 
     val db = Firebase.firestore
@@ -79,6 +83,86 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         longitud = intent.getDoubleExtra("LONGITUD", 0.0)
         nivel = intent.getIntExtra("NIVEL", 0)
 
+        recuperarDescubierto(position)
+
+    }
+
+    private fun recuperarDescubierto(position: Int){
+        if (currentUser != null) {
+            // El usuario está autenticado, obtener el correo electrónico
+            val userEmail = currentUser.email
+
+            // Verificar si el correo electrónico no es nulo
+            if (userEmail != null) {
+                // Construir la referencia al documento del usuario en Firestore
+                val userDocument = db.collection("Usuarios").document(userEmail)
+
+                // Obtener los datos del usuario desde Firestore
+                userDocument.get()
+                    .addOnSuccessListener { document ->
+                        if (document != null && document.exists()) {
+                            // El documento existe, recuperar los datos
+                            val nivel1Data = document.get("nivel.nivel1") as? Map<String, Boolean>
+
+                            if (nivel1Data != null) {
+                                // Verificar si la variable en la posición específica es true o false
+                                val variableValue = nivel1Data["descubierto$position"] ?: false
+                                if (!variableValue){
+                                    binding.mapView.setVisibility(View.VISIBLE)
+                                    binding.txtTienes.setVisibility(View.VISIBLE)
+                                    binding.txtPuntuacion.setVisibility(View.VISIBLE)
+                                    binding.txtIntentosNum.setVisibility(View.VISIBLE)
+                                    binding.txtIntentos.setVisibility(View.VISIBLE)
+                                    binding.mapView.setVisibility(View.VISIBLE)
+
+                                    binding.imgDetalle.setVisibility(View.GONE)
+                                    binding.txtDetalles.setVisibility(View.GONE)
+                                    binding.txtCambiarCiudad.setVisibility(View.GONE)
+                                    binding.txtCambiarDescr.setVisibility(View.GONE)
+                                    binding.txtCiudad.setVisibility(View.GONE)
+                                    binding.txtDescr.setVisibility(View.GONE)
+                                    binding.imageView2.setVisibility(View.GONE)
+                                    binding.imageView3.setVisibility(View.GONE)
+                                    binding.imageView4.setVisibility(View.GONE)
+                                    binding.imageView5.setVisibility(View.GONE)
+                                    binding.imageView6.setVisibility(View.GONE)
+                                }else{
+                                    binding.imgDetalle.setVisibility(View.VISIBLE)
+                                    binding.txtDetalles.setVisibility(View.VISIBLE)
+                                    binding.txtCambiarCiudad.setVisibility(View.VISIBLE)
+                                    binding.txtCambiarDescr.setVisibility(View.VISIBLE)
+                                    binding.txtCiudad.setVisibility(View.VISIBLE)
+                                    binding.txtDescr.setVisibility(View.VISIBLE)
+                                    binding.imageView2.setVisibility(View.VISIBLE)
+                                    binding.imageView3.setVisibility(View.VISIBLE)
+                                    binding.imageView4.setVisibility(View.VISIBLE)
+                                    binding.imageView5.setVisibility(View.VISIBLE)
+                                    binding.imageView6.setVisibility(View.VISIBLE)
+
+                                    binding.mapView.setVisibility(View.GONE)
+                                    binding.txtTienes.setVisibility(View.GONE)
+                                    binding.txtPuntuacion.setVisibility(View.GONE)
+                                    binding.txtIntentosNum.setVisibility(View.GONE)
+                                    binding.txtIntentos.setVisibility(View.GONE)
+                                    binding.mapView.setVisibility(View.GONE)
+                                }
+
+                            } else {
+                                Log.e(TAG, "No se encontraron datos en nivel1")
+                            }
+                        } else {
+                            Log.e(TAG, "El documento del usuario no existe")
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e(TAG, "Error al obtener el documento del usuario", exception)
+                    }
+            } else {
+                Log.e(TAG, "El correo electrónico del usuario es nulo")
+            }
+        } else {
+            Log.e(TAG, "El usuario no está autenticado")
+        }
     }
 
     private fun comprobarCoordenadas(

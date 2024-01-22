@@ -15,6 +15,7 @@ import com.google.firebase.storage.storage
 import java.io.File
 import java.util.*
 
+
 class ViewPagerAdapter(val context: Context, val imageList: List<String>, val nivel: Int) : PagerAdapter() {
 
     var lat:Double = 0.0

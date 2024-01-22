@@ -118,7 +118,22 @@ class Login : AppCompatActivity() {
                                 val user = hashMapOf(
                                     "nombre" to account.displayName,
                                     "record" to 0,
-                                    "nivel" to 1
+                                    "nivel" to hashMapOf(
+                                        "nivel1" to hashMapOf(
+                                            "descubierto0" to false,
+                                            "descubierto1" to false,
+                                            "descubierto2" to false,
+                                            "descubierto3" to false,
+                                            "descubierto4" to false
+                                        ),
+                                        "nivel2" to hashMapOf(
+                                            "descubierto1" to false,
+                                            "descubierto2" to false,
+                                            "descubierto3" to false,
+                                            "descubierto4" to false,
+                                            "descubierto5" to false
+                                        )
+                                    )
                                 )
 
                                 // Guardar los datos del usuario en Firestore
