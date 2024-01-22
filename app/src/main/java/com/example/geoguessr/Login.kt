@@ -117,6 +117,7 @@ class Login : AppCompatActivity() {
                                 // El usuario no existe en Firestore, guardar los datos
                                 val user = hashMapOf(
                                     "nombre" to account.displayName,
+                                    "puntuacion" to 0,
                                     "record" to 0,
                                     "nivel" to hashMapOf(
                                         "nivel1" to hashMapOf(

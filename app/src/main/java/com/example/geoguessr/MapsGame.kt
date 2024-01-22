@@ -203,9 +203,17 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             intentos--
             binding.txtIntentosNum.setText(intentos.toString())
             if (latitud > latitudJugador) {
-                showToast(context, "La comida está más al norte. Te quedan $intentos intentos")
+                Toast.makeText(
+                    applicationContext,
+                    "La comida está más al norte. Te quedan $intentos intentos", Toast.LENGTH_LONG
+                ).show()
+
             } else if (latitud < latitudJugador) {
-                showToast(context, "La comida está más al sur. Te quedan $intentos intentos")
+                Toast.makeText(
+                    applicationContext,
+                    "La comida está más al sur. Te quedan $intentos intentos", Toast.LENGTH_LONG
+                ).show()
+
             }
             if (intentos == 0) {
                 winner = false
@@ -473,11 +481,6 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                     .update("historico.historico", FieldValue.arrayUnion(nuevoHistorico))
                     .addOnSuccessListener {
                         Log.d("Firestore", "Historial guardado exitosamente")
-                        Toast.makeText(
-                            applicationContext,
-                            "Historial guardado exitosamente",
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
                     .addOnFailureListener { e ->
                         Log.e("Firestore", "Error al guardar el historial", e)
@@ -593,12 +596,9 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         if (user != null) {
             db.collection("Usuarios")
                 .document(user.email.toString())
-                .update("record", puntuacion)
+                .update("puntuacion", puntuacion)
                 .addOnSuccessListener {
-                    Toast.makeText(
-                        applicationContext,
-                        puntuacion.toString(), Toast.LENGTH_SHORT
-                    ).show()
+                    Log.e("PVR", "los puntos son : $puntuacion")
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(
@@ -621,13 +621,10 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                 .addOnSuccessListener { document ->
                     if (document.exists()) {
                         // El documento existe, obtener el nombre y establecerlo en el botón de perfil
-                        val punt = document.getLong("record")
+                        val punt = document.getLong("puntuacion")
 
                         binding.txtPuntuacionNum.setText(punt.toString())
-                        Toast.makeText(
-                            applicationContext,
-                            punt.toString(), Toast.LENGTH_SHORT
-                        ).show()
+
                     } else {
                         Toast.makeText(
                             applicationContext,
