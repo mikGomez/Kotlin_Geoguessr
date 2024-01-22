@@ -8,7 +8,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!--on below line we are adding view pager -->
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/idViewPager"
         android:layout_width="300dp"
