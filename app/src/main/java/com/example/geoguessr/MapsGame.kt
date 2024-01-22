@@ -501,8 +501,6 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         }
     }
 
-
-
     /**
      * Este evento se lanza cuando hacemos click en un marcador.
      */
