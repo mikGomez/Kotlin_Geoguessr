@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun cargarImagenesDesdeStorage(nivel: Int) {
         val nivelPath = if (nivel == 1) "nivel1" else "nivel2"
-
         // Iterar sobre las imágenes en Firebase Storage
         for (i in 1..5) {
             val imageName = "imagen_$i.jpg"

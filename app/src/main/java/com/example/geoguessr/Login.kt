@@ -133,6 +133,9 @@ class Login : AppCompatActivity() {
                                             "descubierto4" to false,
                                             "descubierto5" to false
                                         )
+                                    ),
+                                    "historico" to hashMapOf(
+                                        "historico" to arrayListOf<HashMap<String, Any>>() // Array vacío
                                     )
                                 )
 

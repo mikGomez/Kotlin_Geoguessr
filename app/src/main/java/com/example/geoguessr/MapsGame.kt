@@ -39,6 +39,8 @@ import com.google.android.gms.maps.model.PointOfInterest
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import java.io.File
 import java.lang.Math.atan2
@@ -448,10 +450,53 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
         pintarCirculo(marcador.position)
         comprobarCoordenadas(this, latitud, longitud, marcador)
-
+        guardarHistorico(marcador.position.latitude,marcador.position.longitude)
 
         Log.e("ACSCO", "Marcador añadido, marcadores actuales: ${alMarcadores.toString()}")
     }
+
+    private fun guardarHistorico(lat: Double, long: Double) {
+        val user = FirebaseAuth.getInstance().currentUser
+
+        if (user != null) {
+            // Construye el objeto de historial que quieres guardar
+            val nuevoHistorico = hashMapOf(
+                "latitud" to lat,
+                "longitud" to long,
+                )
+            try {
+                // Actualiza el historial en Firestore
+                db.collection("Usuarios")
+                    .document(user.email.toString())
+                    .update("historico.historico", FieldValue.arrayUnion(nuevoHistorico))
+                    .addOnSuccessListener {
+                        Log.d("Firestore", "Historial guardado exitosamente")
+                        Toast.makeText(
+                            applicationContext,
+                            "Historial guardado exitosamente",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("Firestore", "Error al guardar el historial", e)
+                        Toast.makeText(
+                            applicationContext,
+                            "Fallo al guardar el historial",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+            } catch (e: Exception) {
+                Log.e("Firestore", "Excepción al guardar historial: ${e.message}")
+                Toast.makeText(
+                    applicationContext,
+                    "Excepción al guardar historial",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+
 
     /**
      * Este evento se lanza cuando hacemos click en un marcador.
