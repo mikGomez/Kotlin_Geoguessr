@@ -235,7 +235,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                 var valorPuntuacion = binding.txtPuntuacionNum.text.toString()
                 var puntuacion = valorPuntuacion.toInt()
                 puntuacion += 100
-
+                guardarPuntuacion(puntuacion)
                 actualizarDescubierto(position,true)
 
                 binding.txtPuntuacionNum.setText(puntuacion.toString())
@@ -252,7 +252,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                     })
                 )
                 setNegativeButton("Salir", ({ dialog: DialogInterface, which: Int ->
-                    closeApp(puntuacion)
+                    goGameSelector(this@MapsGame)
                 }))
 
 
@@ -274,33 +274,6 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                 show() //builder.show()
             }
         }
-
-    }
-
-    private fun closeApp(puntu: Int) {
-        val builder = AlertDialog.Builder(this)
-        val process: Process
-        with(builder)
-        {
-            setTitle("VAS A SALIR AL MENU DE JUEGO")
-            setMessage("¿Deseas guardar los datos de tu partida? (nivel, puntuación y tiradas) ")
-            //Otra forma es definir directamente aquí lo que se hace cuando se pulse.
-            setPositiveButton(
-                "GUARDAR Y SALIR",
-                DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
-                    saveGame()
-                    guardarPuntuacion(puntu)
-                    goGameSelector(this@MapsGame)
-                })
-            )
-            setNegativeButton("NO GUARDAR Y SALIR", ({ dialog: DialogInterface, which: Int ->
-                goGameSelector(this@MapsGame)
-            }))
-            show() //builder.show()
-        }
-    }
-
-    private fun saveGame() {
 
     }
 
