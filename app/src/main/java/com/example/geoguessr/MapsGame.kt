@@ -243,7 +243,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                     applicationContext,
                     puntuacion.toString(), Toast.LENGTH_SHORT
                 ).show()
-                setMessage("El plato tal tal. Pulsa OK para elegir otro plato o SALIR para ir al menu de juegos")
+                setMessage("Pulsa OK para elegir otro plato o SALIR para ir al menu de juegos")
 
                 setPositiveButton(
                     "OK",
