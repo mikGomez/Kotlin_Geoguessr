@@ -112,9 +112,11 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                 userDocument.get()
                     .addOnSuccessListener { document ->
                         if (document != null && document.exists()) {
+                            var nivel1Data = document.get("nivel.nivel1") as? Map<String, Boolean>
+                            if(nivel == 2){
+                                nivel1Data = document.get("nivel.nivel2") as? Map<String, Boolean>
+                            }
                             // El documento existe, recuperar los datos
-                            val nivel1Data = document.get("nivel.nivel1") as? Map<String, Boolean>
-
                             if (nivel1Data != null) {
                                 // Verificar si la variable en la posición específica es true o false
                                 val variableValue = nivel1Data["descubierto$position"] ?: false
@@ -652,9 +654,15 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                 val userDocument = db.collection("Usuarios").document(userEmail)
 
                 // Construir el mapa de actualización
-                val updateMap = hashMapOf<String, Any>(
+
+                var updateMap = hashMapOf<String, Any>(
                     "nivel.nivel1.descubierto$position" to nuevoValor
                 )
+                if (nivel == 2){
+                    updateMap = hashMapOf<String, Any>(
+                        "nivel.nivel2.descubierto$position" to nuevoValor
+                    )
+                }
 
                 // Actualizar el documento en Firestore
                 userDocument.update(updateMap)
