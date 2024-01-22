@@ -72,19 +72,13 @@ class MainActivity : AppCompatActivity() {
                 "nivel.nivel1.descubierto1" to false,
                 "nivel.nivel1.descubierto2" to false,
                 "nivel.nivel1.descubierto3" to false,
-                "nivel.nivel1.descubierto4" to false
+                "nivel.nivel1.descubierto4" to false,
+                "nivel.nivel2.descubierto0" to false,
+                "nivel.nivel2.descubierto1" to false,
+                "nivel.nivel2.descubierto2" to false,
+                "nivel.nivel2.descubierto3" to false,
+                "nivel.nivel2.descubierto4" to false
             )
-            if(nivel == 2){
-                nuevosDatos = hashMapOf<String, Any>(
-                    "puntuacion" to 0,
-                    "record" to 0,
-                    "nivel.nivel2.descubierto0" to false,
-                    "nivel.nivel2.descubierto1" to false,
-                    "nivel.nivel2.descubierto2" to false,
-                    "nivel.nivel2.descubierto3" to false,
-                    "nivel.nivel2.descubierto4" to false
-                )
-            }
             usuarioDocRef.update(nuevosDatos)
                 .addOnSuccessListener {
                     Log.e("PVR", "Los puntos son: ${nuevosDatos["puntuacion"]}")
