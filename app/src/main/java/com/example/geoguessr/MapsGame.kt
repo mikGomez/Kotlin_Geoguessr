@@ -192,6 +192,8 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         longitud: Double,
         marcador: Marker
     ) {
+        var valorPuntuacion = binding.txtPuntuacionNum.text.toString()
+        var puntuacion = valorPuntuacion.toInt()
         val latitudJugador: Double = marcador.position.latitude
         val longitudJugador: Double = marcador.position.longitude
         val winner: Boolean
@@ -207,15 +209,22 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             if (latitud > latitudJugador) {
                 Toast.makeText(
                     applicationContext,
-                    "La comida está más al norte. Te quedan $intentos intentos", Toast.LENGTH_LONG
+                    "La comida está más al norte. Te quedan $intentos intentos y se ha restado 5 puntos", Toast.LENGTH_LONG
                 ).show()
+                var nuevaPunt:Int = 0
+                nuevaPunt = restarPuntuacion(puntuacion,intentos)
+                guardarPuntuacion(nuevaPunt)
+                binding.txtPuntuacionNum.setText(nuevaPunt.toString())
 
             } else if (latitud < latitudJugador) {
                 Toast.makeText(
                     applicationContext,
-                    "La comida está más al sur. Te quedan $intentos intentos", Toast.LENGTH_LONG
+                    "La comida está más al sur. Te quedan $intentos intentos y se ha restado 5 puntos", Toast.LENGTH_LONG
                 ).show()
-
+                var nuevaPunt:Int = 0
+                nuevaPunt = restarPuntuacion(puntuacion,intentos)
+                guardarPuntuacion(nuevaPunt)
+                binding.txtPuntuacionNum.setText(nuevaPunt.toString())
             }
             if (intentos == 0) {
                 winner = false
@@ -226,14 +235,13 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
     private fun dialog(winner: Boolean) {
         val builder = AlertDialog.Builder(this)
-
+        var valorPuntuacion = binding.txtPuntuacionNum.text.toString()
+        var puntuacion = valorPuntuacion.toInt()
         if (winner) {
             with(builder)
             {
                 setTitle("HAS ACERTADO")
 
-                var valorPuntuacion = binding.txtPuntuacionNum.text.toString()
-                var puntuacion = valorPuntuacion.toInt()
                 puntuacion += 100
                 guardarPuntuacion(puntuacion)
                 actualizarDescubierto(position,true)
@@ -263,7 +271,11 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             {
                 actualizarDescubierto(position,false)
                 setTitle("SE HAN ACABADO TODOS TUS INTENTOS")
-                setMessage("Pulsa para volver al menu de juegos")
+                setMessage("Se han restado 10 puntos. Pulsa para volver al menu de juegos")
+                var nuevaPunt:Int = 0
+                nuevaPunt = restarPuntuacion(puntuacion,intentos)
+                guardarPuntuacion(nuevaPunt)
+                binding.txtPuntuacionNum.setText(nuevaPunt.toString())
                 //Otra forma es definir directamente aquí lo que se hace cuando se pulse.
                 setPositiveButton(
                     "OK",
@@ -374,21 +386,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         }
     }
 
-    /**
-     * Con este método vamos a ajustar el tamaño de todos los iconos que usemos en los marcadores.
-     */
-    fun sizeIcon(idImage: Int): BitmapDescriptor {
-        val altura = 60
-        val anchura = 60
 
-        var draw = ContextCompat.getDrawable(this, idImage) as BitmapDrawable
-        val bitmap = draw.bitmap  //Aquí tenemos la imagen.
-
-        //Le cambiamos el tamaño:
-        val smallBitmap = Bitmap.createScaledBitmap(bitmap, anchura, altura, false)
-        return BitmapDescriptorFactory.fromBitmap(smallBitmap)
-
-    }
 //-----------------------------------------------------------------------------------------------------
     //----------------------------------------- Eventos en el mapa ----------------------------------------
     //-----------------------------------------------------------------------------------------------------
@@ -440,42 +438,6 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         Log.e("ACSCO", "Marcador añadido, marcadores actuales: ${alMarcadores.toString()}")
     }
 
-    private fun guardarHistorico(lat: Double, long: Double) {
-        val user = FirebaseAuth.getInstance().currentUser
-
-        if (user != null) {
-            // Construye el objeto de historial que quieres guardar
-            val nuevoHistorico = hashMapOf(
-                "latitud" to lat,
-                "longitud" to long,
-                )
-            try {
-                // Actualiza el historial en Firestore
-                db.collection("Usuarios")
-                    .document(user.email.toString())
-                    .update("historico.historico", FieldValue.arrayUnion(nuevoHistorico))
-                    .addOnSuccessListener {
-                        Log.d("Firestore", "Historial guardado exitosamente")
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e("Firestore", "Error al guardar el historial", e)
-                        Toast.makeText(
-                            applicationContext,
-                            "Fallo al guardar el historial",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-            } catch (e: Exception) {
-                Log.e("Firestore", "Excepción al guardar historial: ${e.message}")
-                Toast.makeText(
-                    applicationContext,
-                    "Excepción al guardar historial",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
     /**
      * Este evento se lanza cuando hacemos click en un marcador.
      */
@@ -488,22 +450,6 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         map.clear()
 
         return true;
-    }
-
-    /**
-     * Nos coloca en la ubicación actual.
-     */
-    @SuppressLint("MissingPermission")
-    private fun irubicacioActual() {
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val miUbicacion = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-        val latLng = LatLng(miUbicacion!!.latitude, miUbicacion.longitude)
-        map.moveCamera(
-            CameraUpdateFactory.newLatLngZoom(
-                latLng,
-                18f
-            )
-        ) //--> Mueve la cámara a esa posición, sin efecto. El valor real indica el nivel de Zoom, de menos a más.
     }
 
     //------------------------------------------------------------------------------------------------------
@@ -561,7 +507,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     }
 
     /**
-     * Metodo para el registro/login con google
+     * Metodo para guardar la puntuacion que gana el jugador
      */
     private fun guardarPuntuacion(puntuacion: Int) {
         val user = FirebaseAuth.getInstance().currentUser
@@ -583,6 +529,9 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         }
     }
 
+    /**
+     * Metodo para cargar la puntuacion actual del usuario
+     */
     private fun cargarPuntuacion(){
         // Obtener el email del usuario actualmente autenticado
         val userEmail = FirebaseAuth.getInstance().currentUser?.email
@@ -616,6 +565,10 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             ).show()
         }
     }
+
+    /**
+     * Metood para actualizar el estado de un mapa si el jugador acierta
+     */
     private fun actualizarDescubierto(position: Int, nuevoValor: Boolean) {
         if (currentUser != null) {
             val userEmail = currentUser.email
@@ -648,5 +601,62 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         } else {
             Log.e(TAG, "El usuario no está autenticado")
         }
+    }
+
+    /**
+     * Metodo para guardar el historico de tiradas
+     */
+    private fun guardarHistorico(lat: Double, long: Double) {
+        val user = FirebaseAuth.getInstance().currentUser
+
+        if (user != null) {
+            // Construye el objeto de historial que quieres guardar
+            val nuevoHistorico = hashMapOf(
+                "latitud" to lat,
+                "longitud" to long,
+            )
+            try {
+                // Actualiza el historial en Firestore
+                db.collection("Usuarios")
+                    .document(user.email.toString())
+                    .update("historico.historico", FieldValue.arrayUnion(nuevoHistorico))
+                    .addOnSuccessListener {
+                        Log.d("Firestore", "Historial guardado exitosamente")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("Firestore", "Error al guardar el historial", e)
+                        Toast.makeText(
+                            applicationContext,
+                            "Fallo al guardar el historial",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+            } catch (e: Exception) {
+                Log.e("Firestore", "Excepción al guardar historial: ${e.message}")
+                Toast.makeText(
+                    applicationContext,
+                    "Excepción al guardar historial",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    /**
+     * Metodo para restar PUNTUACION si falla
+     */
+    private fun restarPuntuacion(puntu:Int, nIntentos:Int):Int{
+        var nuevaPunt:Int= 0
+        if(puntu == 0){
+            nuevaPunt = puntu
+        }
+        else if (nIntentos == 0){
+            nuevaPunt = puntu - 10
+        }else{
+            nuevaPunt = puntu - 5
+        }
+
+
+        return nuevaPunt
     }
 }
