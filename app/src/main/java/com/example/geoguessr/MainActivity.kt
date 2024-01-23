@@ -1,5 +1,6 @@
 package com.example.geoguessr
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
@@ -12,8 +13,6 @@ import com.example.geoguessr.databinding.ActivityLoginBinding
 import com.example.geoguessr.databinding.ActivityMainBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.firestore
 
 
@@ -49,6 +48,21 @@ class MainActivity : AppCompatActivity() {
 
         viewPagerAdapter = ViewPagerAdapter(this@MainActivity, imageList, nivel)
         viewPager.adapter = viewPagerAdapter
+    }
+
+    override fun onBackPressed() {
+        // Realiza acciones específicas antes de cerrar la actividad
+        volverLevelSelector(this)
+        // Por ejemplo, puedes mostrar un cuadro de diálogo de confirmación
+
+        // Luego, llama al método original para cerrar la actividad
+        super.onBackPressed()
+    }
+
+    private fun volverLevelSelector(context: Context) {
+        val intent = Intent(context, LevelSelector::class.java)
+
+        context.startActivity(intent)
     }
 
     private fun cargarImagenesDesdeStorage(nivel: Int) {

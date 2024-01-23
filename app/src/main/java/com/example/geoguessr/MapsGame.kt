@@ -100,6 +100,22 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             startActivity(intent)
         }
 
+
+
+    }
+    override fun onBackPressed() {
+        // Realiza acciones específicas antes de cerrar la actividad
+        volverMainActivity(this)
+        // Por ejemplo, puedes mostrar un cuadro de diálogo de confirmación
+
+        // Luego, llama al método original para cerrar la actividad
+        super.onBackPressed()
+    }
+
+    private fun volverMainActivity(context: Context) {
+        val intent = Intent(context, MainActivity::class.java)
+
+        context.startActivity(intent)
     }
 
     private fun recuperarDescubierto(position: Int){
@@ -248,6 +264,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
                 puntuacion += 100
                 guardarPuntuacion(puntuacion)
+                guardarRecord(puntuacion)
                 actualizarDescubierto(position,true)
 
                 binding.txtPuntuacionNum.setText(puntuacion.toString())
@@ -662,5 +679,25 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
 
         return nuevaPunt
+    }
+
+    private fun guardarRecord(puntuacion: Int){
+        val user = FirebaseAuth.getInstance().currentUser
+
+        if (user != null) {
+            db.collection("Usuarios")
+                .document(user.email.toString())
+                .update("record", puntuacion)
+                .addOnSuccessListener {
+                    Log.e("PVR", "El record es : $puntuacion")
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        applicationContext,
+                        "Fallo al actualizar el record", Toast.LENGTH_SHORT
+                    ).show()
+
+                }
+        }
     }
 }

@@ -47,6 +47,25 @@ class GameSelector : AppCompatActivity() {
         }.attach()
     }
 
+    override fun onBackPressed() {
+        // Realiza acciones específicas antes de cerrar la actividad
+        volverLogin(this)
+        // Por ejemplo, puedes mostrar un cuadro de diálogo de confirmación
+
+        // Luego, llama al método original para cerrar la actividad
+        super.onBackPressed()
+    }
+
+    private fun volverLogin(context: Context) {
+        val signInClient = Identity.getSignInClient(this)
+        signInClient.signOut()
+
+        val intent = Intent(context, Login::class.java)
+
+        context.startActivity(intent)
+        finish()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return super.onCreateOptionsMenu(menu)
