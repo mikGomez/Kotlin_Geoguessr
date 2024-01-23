@@ -18,6 +18,9 @@
         android:theme="@style/Theme.Geoguessr"
         tools:targetApi="31">
         <activity
+            android:name=".VideoComida"
+            android:exported="false" />
+        <activity
             android:name=".GameSelector"
             android:exported="false" />
 

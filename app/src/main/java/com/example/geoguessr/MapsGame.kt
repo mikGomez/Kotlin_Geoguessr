@@ -95,6 +95,10 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         fotoPlato = intent.getStringExtra("FOTOPLATO").toString()
 
         recuperarDescubierto(position)
+        binding.imgDetalle.setOnClickListener {
+            val intent = Intent(this, VideoComida::class.java)
+            startActivity(intent)
+        }
 
     }
 
