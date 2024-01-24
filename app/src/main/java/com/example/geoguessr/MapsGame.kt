@@ -13,6 +13,7 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.location.Location
 import android.location.LocationManager
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -68,6 +69,9 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     val currentUser = auth.currentUser
 
 
+    var mediaPlayer: MediaPlayer? = null
+
+
     val db = Firebase.firestore
 
 
@@ -103,6 +107,8 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
 
     }
+
+
     override fun onBackPressed() {
         // Realiza acciones específicas antes de cerrar la actividad
         volverMainActivity(this)
@@ -261,7 +267,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             with(builder)
             {
                 setTitle("HAS ACERTADO")
-
+                sonidoAcertado()
                 puntuacion += 100
                 guardarPuntuacion(puntuacion)
                 guardarRecord(puntuacion)
@@ -293,6 +299,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                 actualizarDescubierto(position,false)
                 setTitle("SE HAN ACABADO TODOS TUS INTENTOS")
                 setMessage("Se han restado 10 puntos. Pulsa para volver al menu de juegos")
+                sonidoIntentosCero()
                 var nuevaPunt:Int = 0
                 nuevaPunt = restarPuntuacion(puntuacion,intentos)
                 guardarPuntuacion(nuevaPunt)
@@ -699,5 +706,17 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
 
                 }
         }
+    }
+
+    private fun sonidoAcertado(){
+        mediaPlayer = MediaPlayer.create(this,R.raw.acertado)
+
+        mediaPlayer?.start()
+    }
+
+    private fun sonidoIntentosCero(){
+        mediaPlayer = MediaPlayer.create(this,R.raw.intentoscero)
+
+        mediaPlayer?.start()
     }
 }
