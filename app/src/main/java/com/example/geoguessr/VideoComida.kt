@@ -33,7 +33,7 @@ class VideoComida : AppCompatActivity() {
             // set the absolute path of the video file which is going to be played
             binding.vv!!.setVideoURI(
                 Uri.parse("android.resource://"
-                        + packageName + "/" + R.raw.mememe))
+                        + packageName + "/" + R.raw.gachas))
 
             binding.vv!!.requestFocus()
 

@@ -99,11 +99,19 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         fotoPlato = intent.getStringExtra("FOTOPLATO").toString()
 
         recuperarDescubierto(position)
-        binding.imgDetalle.setOnClickListener {
-            val intent = Intent(this, VideoComida::class.java)
-            startActivity(intent)
-        }
 
+            binding.imgDetalle.setOnClickListener {
+                if (fotoPlato.equals("gachas_ciudad_real")) {
+                    val intent = Intent(this, VideoComida::class.java)
+                    startActivity(intent)
+                }else{
+                    Toast.makeText(
+                        applicationContext,
+                        "El video esta en mantenimiento",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+        }
 
 
     }
@@ -112,14 +120,13 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     override fun onBackPressed() {
         // Realiza acciones específicas antes de cerrar la actividad
         volverMainActivity(this)
-        // Por ejemplo, puedes mostrar un cuadro de diálogo de confirmación
 
-        // Luego, llama al método original para cerrar la actividad
         super.onBackPressed()
     }
 
     private fun volverMainActivity(context: Context) {
         val intent = Intent(context, MainActivity::class.java)
+        intent.putExtra("levelGame",nivel)
 
         context.startActivity(intent)
     }
