@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.geoguessr.databinding.FragmentAsiaGameBinding
 import com.example.geoguessr.databinding.FragmentEEUUBinding
 
 class EEUUFragment : Fragment() {
@@ -29,7 +28,7 @@ class EEUUFragment : Fragment() {
     }
 
     private fun abrirActividad() {
-        val intent = Intent(activity, LevelSelector::class.java)
+        val intent = Intent(activity, EEUUWin::class.java)
         startActivity(intent)
     }
 
