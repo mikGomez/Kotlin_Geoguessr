@@ -35,9 +35,9 @@ class LevelSelector : AppCompatActivity() {
             with(builder)
             {
                 setTitle("VAS A ENTRAR AL NIVEL 1")
-                setMessage("Tu puntuación actual se borrará. ¿Estas seguro que deseas continuar?")
+                setMessage("¿Quieres mantener tu puntuación actual o empezar de cero?")
                 setPositiveButton(
-                    "SI",
+                    "Borrar puntuación",
                     DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
                         puntuacion = 0
                         guardarPuntuacion(puntuacion)
@@ -45,8 +45,8 @@ class LevelSelector : AppCompatActivity() {
                         openImages(context, 1)
                     })
                 )
-                setNegativeButton("NO", ({ dialog: DialogInterface, which: Int ->
-                    goGameSelector(context)
+                setNegativeButton("Mantener puntuación", ({ dialog: DialogInterface, which: Int ->
+                    openImages(context, 1)
                 }))
 
 
@@ -58,9 +58,9 @@ class LevelSelector : AppCompatActivity() {
             with(builder)
             {
                 setTitle("VAS A ENTRAR AL NIVEL 2")
-                setMessage("Tu puntuación actual se borrará. ¿Estas seguro que deseas continuar?")
+                setMessage("¿Quieres mantener tu puntuación actual o empezar de cero?")
                 setPositiveButton(
-                    "SI",
+                    "Borrar puntuación",
                     DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
                         puntuacion = 0
                         guardarPuntuacion(puntuacion)
@@ -68,8 +68,8 @@ class LevelSelector : AppCompatActivity() {
                         openImages(context, 2)
                     })
                 )
-                setNegativeButton("NO", ({ dialog: DialogInterface, which: Int ->
-                    goGameSelector(context)
+                setNegativeButton("Mantener puntuación", ({ dialog: DialogInterface, which: Int ->
+                    openImages(context, 2)
                 }))
 
 

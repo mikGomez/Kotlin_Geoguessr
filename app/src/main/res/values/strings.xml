@@ -3,7 +3,7 @@
 
     <string name="idGoogle" translatable="false">17691969973-01glq0fu95bncg9fdaebj1hieperm22m.apps.googleusercontent.com</string>
     <!--LOGIN-->
-    <string name="botonGoogle">Iniciar Sesion</string>
+    <string name="botonGoogle">EMPEZAR JUEGO</string>
 
     <!-- NIVELES -->
     <string name="btnLevel1">Nivel 1</string>
