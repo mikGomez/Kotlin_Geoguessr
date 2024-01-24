@@ -38,7 +38,7 @@ class GameSelector : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout,binding.viewPager){tab,index->
             tab.text = when(index){
                 0->{"Comidas España"}
-                1->{"Comidas Europa"}
+                1->{"Comidas Latinas"}
                 2->{"Comidas Asia"}
                 3->{"Comidas EEUU"}
                 else->{throw Resources.NotFoundException("Posición no encontrada") }

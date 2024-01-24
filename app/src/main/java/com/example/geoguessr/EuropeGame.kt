@@ -24,7 +24,7 @@ class EuropeGame : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.imageView.setImageResource(R.drawable.pimientos_navarra)
+        binding.imageView.setImageResource(R.drawable.comida_latina)
         binding.imageView.setOnClickListener {
             Toast.makeText(
                 requireContext(),

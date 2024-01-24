@@ -7,10 +7,10 @@
     android:background="@color/md_theme_dark_secondary"
     tools:context=".SpainFragment">
 
-
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="310dp"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         tools:src="@tools:sample/avatars" />
 </FrameLayout>

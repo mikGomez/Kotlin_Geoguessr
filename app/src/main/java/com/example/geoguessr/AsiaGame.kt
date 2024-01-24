@@ -23,7 +23,7 @@ class AsiaGame : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.imageView.setImageResource(R.drawable.cochinillo_segovia)
+        binding.imageView.setImageResource(R.drawable.comida_asia)
 
         binding.imageView.setOnClickListener {
             Toast.makeText(
