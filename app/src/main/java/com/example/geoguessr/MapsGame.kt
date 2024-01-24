@@ -161,6 +161,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                                     binding.txtIntentosNum.setVisibility(View.VISIBLE)
                                     binding.txtIntentos.setVisibility(View.VISIBLE)
                                     binding.mapView.setVisibility(View.VISIBLE)
+                                    binding.txtName.text = nombrePlato
 
                                     binding.imgDetalle.setVisibility(View.GONE)
                                     binding.txtDetalles.setVisibility(View.GONE)
@@ -173,6 +174,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                                     binding.imageView4.setVisibility(View.GONE)
                                     binding.imageView5.setVisibility(View.GONE)
                                     binding.imageView6.setVisibility(View.GONE)
+                                    binding.txtVideo.setVisibility(View.GONE)
                                 }else{
                                     binding.imgDetalle.setVisibility(View.VISIBLE)
                                     binding.txtDetalles.setVisibility(View.VISIBLE)
@@ -185,6 +187,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                                     binding.imageView4.setVisibility(View.VISIBLE)
                                     binding.imageView5.setVisibility(View.VISIBLE)
                                     binding.imageView6.setVisibility(View.VISIBLE)
+                                    binding.txtVideo.setVisibility(View.VISIBLE)
                                     binding.txtCambiarDescr.text = detallesPlato
                                     binding.txtCambiarCiudad.text = ciudadPlato
                                     binding.txtName.text = nombrePlato
