@@ -242,7 +242,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             if (latitud > latitudJugador) {
                 Toast.makeText(
                     applicationContext,
-                    "La comida está más al norte. Te quedan $intentos intentos y se ha restado 5 puntos", Toast.LENGTH_LONG
+                    "La comida está más al norte. Te quedan $intentos intentos", Toast.LENGTH_LONG
                 ).show()
                 var nuevaPunt:Int = 0
                 nuevaPunt = restarPuntuacion(puntuacion,intentos)
@@ -252,7 +252,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
             } else if (latitud < latitudJugador) {
                 Toast.makeText(
                     applicationContext,
-                    "La comida está más al sur. Te quedan $intentos intentos y se ha restado 5 puntos", Toast.LENGTH_LONG
+                    "La comida está más al sur. Te quedan $intentos intentos", Toast.LENGTH_LONG
                 ).show()
                 var nuevaPunt:Int = 0
                 nuevaPunt = restarPuntuacion(puntuacion,intentos)
@@ -357,18 +357,10 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        val location = LatLng(37.7749, -122.4194) // Coordenadas de San Francisco, por ejemplo
-
-        //googleMap.addMarker(MarkerOptions().position(location).title("Marker in San Francisco"))
-        //googleMap.moveCamera(CameraUpdateFactory.newLatLng(location))
-
         map = googleMap
-        //Se pueden seleccionar varios tiops de mapas:
-        //  None --> no muestra nada, solo los marcadores. (MAP_TYPE_NONE)
-        //  Normal --> El mapa por defecto. (MAP_TYPE_NORMAL)
-        //  Satélite --> Mapa por satélite.  (MAP_TYPE_SATELLITE)
-        //  Híbrido --> Mapa híbrido entre Normal y Satélite. (MAP_TYPE_HYBRID) Muestra satélite y mapas de carretera, ríos, pueblos, etc... asociados.
-        //  Terreno --> Mapa de terrenos con datos topográficos. (MAP_TYPE_TERRAIN)
+        map.setOnMapClickListener {
+            Toast.makeText(this, "Manten pulsado para marcar una posicion", Toast.LENGTH_SHORT).show()
+        }
         map.mapType = GoogleMap.MAP_TYPE_HYBRID
         map.setOnMyLocationButtonClickListener(this)
         map.setOnMyLocationClickListener(this)
@@ -376,10 +368,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
         map.setOnMapLongClickListener(this)
         map.setOnMarkerClickListener(this)
         createMarker()
-        enableMyLocation() //--> Hanilita, pidiendo permisos, la localización actual.
-        //irubicacioActual() //--> Nos coloca en la ubicación actual directamente. Comenta createMarker par ver esto.
-        //pintarCirculo()
-        //pintarRuta()
+        enableMyLocation()
     }
 
 
