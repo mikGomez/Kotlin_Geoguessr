@@ -5,10 +5,12 @@
     android:id="@+id/btn1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_theme_dark_secondary"
     tools:context=".LevelSelector">
 
     <Button
         android:id="@+id/btnLevel2"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btnLevel2"
@@ -21,6 +23,7 @@
 
     <Button
         android:id="@+id/btnLevel1"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btnLevel1"
@@ -33,6 +36,7 @@
 
     <Button
         android:id="@+id/btnHistoricos"
+        style="@style/Widget.Material3.ExtendedFloatingActionButton.Tertiary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ver historicos"

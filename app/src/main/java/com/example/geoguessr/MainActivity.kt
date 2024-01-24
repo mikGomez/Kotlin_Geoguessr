@@ -81,7 +81,6 @@ class MainActivity : AppCompatActivity() {
             val usuarioDocRef = db.collection("Usuarios").document(user.email.toString())
             var nuevosDatos = hashMapOf<String, Any>(
                 "puntuacion" to 0,
-                "record" to 0,
                 "nivel.nivel1.descubierto0" to false,
                 "nivel.nivel1.descubierto1" to false,
                 "nivel.nivel1.descubierto2" to false,

@@ -19,7 +19,7 @@ class LevelSelector : AppCompatActivity() {
 
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
-
+    var puntuacion:Int= 0
 
     val db = Firebase.firestore
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +39,9 @@ class LevelSelector : AppCompatActivity() {
                 setPositiveButton(
                     "SI",
                     DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
-//                        puntuacion = 0
-//                        guardarPuntuacion(puntuacion)
-//                        binding.txtPUNTUACIONINT.setText(puntuacion.toString())
+                        puntuacion = 0
+                        guardarPuntuacion(puntuacion)
+                        binding.txtPUNTUACIONINT.setText(puntuacion.toString())
                         openImages(context, 1)
                     })
                 )
@@ -62,9 +62,9 @@ class LevelSelector : AppCompatActivity() {
                 setPositiveButton(
                     "SI",
                     DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
-//                        puntuacion = 0
-//                        guardarPuntuacion(puntuacion)
-//                        binding.txtPUNTUACIONINT.setText(puntuacion.toString())
+                        puntuacion = 0
+                        guardarPuntuacion(puntuacion)
+                        binding.txtPUNTUACIONINT.setText(puntuacion.toString())
                         openImages(context, 2)
                     })
                 )
