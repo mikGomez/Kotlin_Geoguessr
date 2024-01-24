@@ -1,12 +1,14 @@
 package com.example.geoguessr
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import com.example.geoguessr.databinding.ActivityLoginBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -25,6 +27,7 @@ class Login : AppCompatActivity() {
     private lateinit var firebaseauth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
 
+
     val TAG = "PVR"
 
     val db = Firebase.firestore
@@ -33,6 +36,7 @@ class Login : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val builder = AlertDialog.Builder(this)
         //Para la autenticación, de cualquier tipo.
         firebaseauth = FirebaseAuth.getInstance()
 
@@ -50,6 +54,22 @@ class Login : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         binding.btnGoogle.setOnClickListener {
             loginEnGoogle()
+        }
+
+        binding.btnAcercaDe.setOnClickListener {
+            with(builder)
+            {
+                setTitle("GeoGuessr v1.5")
+                setMessage("Trabajo para Programacion de Aplicaciones Multiplataforma" +
+                        "\nAutores: Miguel Ángel Gómez y Pablo Villaseñor")
+                setPositiveButton(
+                    "OK",
+                    DialogInterface.OnClickListener(function = { dialog: DialogInterface, which: Int ->
+
+                    })
+                )
+                show() //builder.show()
+            }
         }
     }
 
