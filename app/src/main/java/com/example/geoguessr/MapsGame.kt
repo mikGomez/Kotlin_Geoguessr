@@ -155,15 +155,17 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                                 val variableValue = nivel1Data["descubierto$position"] ?: false
                                 if (!variableValue){
                                     binding.mapView.setVisibility(View.VISIBLE)
+                                    binding.txtName2.setVisibility(View.VISIBLE)
                                     binding.txtTienes.setVisibility(View.VISIBLE)
                                     binding.txtPuntuacion.setVisibility(View.VISIBLE)
                                     binding.txtPuntuacionNum.setVisibility(View.VISIBLE)
                                     binding.txtIntentosNum.setVisibility(View.VISIBLE)
                                     binding.txtIntentos.setVisibility(View.VISIBLE)
                                     binding.mapView.setVisibility(View.VISIBLE)
-                                    binding.txtName.text = nombrePlato
+                                    binding.txtName2.text = nombrePlato
 
                                     binding.imgDetalle.setVisibility(View.GONE)
+                                    binding.txtName.setVisibility(View.GONE)
                                     binding.txtDetalles.setVisibility(View.GONE)
                                     binding.txtCambiarCiudad.setVisibility(View.GONE)
                                     binding.txtCambiarDescr.setVisibility(View.GONE)
@@ -188,6 +190,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                                     binding.imageView5.setVisibility(View.VISIBLE)
                                     binding.imageView6.setVisibility(View.VISIBLE)
                                     binding.txtVideo.setVisibility(View.VISIBLE)
+                                    binding.txtName.setVisibility(View.VISIBLE)
                                     binding.txtCambiarDescr.text = detallesPlato
                                     binding.txtCambiarCiudad.text = ciudadPlato
                                     binding.txtName.text = nombrePlato
@@ -196,6 +199,7 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
                                     binding.imgDetalle.setImageResource(drawable)
 
                                     binding.mapView.setVisibility(View.GONE)
+                                    binding.txtName2.setVisibility(View.GONE)
                                     binding.txtTienes.setVisibility(View.GONE)
                                     binding.txtPuntuacion.setVisibility(View.GONE)
                                     binding.txtPuntuacionNum.setVisibility(View.GONE)
