@@ -21,13 +21,15 @@
             android:name=".EEUUWin"
             android:exported="false"
             android:label="@string/title_activity_eeuuuwin"
-            android:theme="@style/Theme.Geoguessr" />
+            android:theme="@style/Theme.Geoguessr"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".VideoComida"
             android:exported="false" />
         <activity
             android:name=".GameSelector"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -38,12 +40,14 @@
             android:exported="false" />
         <activity
             android:name=".MapsGame"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".Login"
+            android:screenOrientation="portrait"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/idIVImage"
-        android:layout_width="305dp"
-        android:layout_height="465dp"
+        android:layout_width="518dp"
+        android:layout_height="345dp"
         android:layout_centerInParent="true" />
 
 </RelativeLayout>
