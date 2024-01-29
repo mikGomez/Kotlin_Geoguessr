@@ -502,24 +502,6 @@ class MapsGame : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocation
      */
     private fun createMarker() {
         val markerMadrid = LatLng(40.4168, -3.7038)
-        /*
-        Los markers se crean de una forma muy sencilla, basta con crear una instancia de un objeto LatLng() que recibirá dos
-        parámetros, la latitud y la longitud. Yo en este ejemplo he puesto las coordenadas de mi playa favorita.
-        */
-        //map.addMarker(MarkerOptions().position(markerCIFP).title("Mi CIFP favorito!"))
-        //Si queremos cambiar el color del icono, en este caso azul cyan, con un subtexto.
-        val markCIFP = map.addMarker(
-            MarkerOptions().position(markerMadrid).title("Mi instituto favorito!").icon(
-                BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)
-            ).snippet("IES MAESTRE DE CALATRAVA")
-        )
-        alMarcadores.add(markCIFP!!)
-
-        val marcadorComida = LatLng(latitud, longitud)
-
-        val markCR = map.addMarker(MarkerOptions().position(marcadorComida))
-        alMarcadores.add(markCR!!)
-
 
         /*
         La función animateCamera() recibirá tres parámetros:
