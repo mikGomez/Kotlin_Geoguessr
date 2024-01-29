@@ -5,7 +5,7 @@
         android:id="@+id/mnOp1"
         android:icon="@android:drawable/ic_menu_preferences"
         android:iconTint="#FFFFFF"
-        android:title="Informacion"
+        android:title="Sonido"
         android:titleTextColor="#FFFFFF" />
 
     <item

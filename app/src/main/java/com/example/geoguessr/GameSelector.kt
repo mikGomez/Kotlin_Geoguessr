@@ -4,11 +4,13 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.media.AudioManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.example.fragmentsyviewpager.AdaptadorViewPager
 import com.example.geoguessr.databinding.ActivityGameselectorBinding
 import com.example.geoguessr.databinding.ActivityLeverselectorBinding
@@ -17,6 +19,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class GameSelector : AppCompatActivity() {
     lateinit var binding: ActivityGameselectorBinding
+    private var soundEnabled = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameselectorBinding.inflate(layoutInflater)
@@ -73,7 +76,7 @@ class GameSelector : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.mnOp1 -> {
-                irAVentanaOpcion1()
+                toggleSound()
             }
 
             R.id.mnBusqueda -> {
@@ -82,8 +85,24 @@ class GameSelector : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private val irAVentanaOpcion1: () -> Unit = {
-        val intent = Intent(this, LevelSelector::class.java)
-        startActivity(intent)
+    private fun toggleSound() {
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+        if (soundEnabled) {
+            Toast.makeText(
+                this,
+                "Se ha activado el sonido",
+                Toast.LENGTH_SHORT
+            ).show()
+
+        } else {
+            Toast.makeText(
+                this,
+                "Se ha desactivado el sonido",
+                Toast.LENGTH_SHORT
+            ).show()
+
+        }
+        soundEnabled = !soundEnabled
     }
 }
